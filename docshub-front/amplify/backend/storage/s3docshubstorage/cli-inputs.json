@@ -1,0 +1,12 @@
+{
+  "resourceName": "s3docshubstorage",
+  "bucketName": "docshub-storage",
+  "policyUUID": "d22d45e4",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}

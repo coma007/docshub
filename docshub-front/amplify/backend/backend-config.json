@@ -1,0 +1,108 @@
+{
+  "auth": {
+    "docshub": {
+      "customAuth": false,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "serviceType": "imported"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_auth_docshub_allowUnauthenticatedIdentities": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "docshub"
+        }
+      ]
+    },
+    "AMPLIFY_auth_docshub_authRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "docshub"
+        }
+      ]
+    },
+    "AMPLIFY_auth_docshub_authRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "docshub"
+        }
+      ]
+    },
+    "AMPLIFY_auth_docshub_identityPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "docshub"
+        }
+      ]
+    },
+    "AMPLIFY_auth_docshub_identityPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "docshub"
+        }
+      ]
+    },
+    "AMPLIFY_auth_docshub_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "docshub"
+        }
+      ]
+    },
+    "AMPLIFY_auth_docshub_unauthRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "docshub"
+        }
+      ]
+    },
+    "AMPLIFY_auth_docshub_unauthRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "docshub"
+        }
+      ]
+    },
+    "AMPLIFY_auth_docshub_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "docshub"
+        }
+      ]
+    },
+    "AMPLIFY_auth_docshub_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "docshub"
+        }
+      ]
+    },
+    "AMPLIFY_auth_docshub_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "docshub"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "s3docshubstorage": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
+  }
+}

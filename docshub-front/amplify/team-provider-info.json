@@ -1,0 +1,35 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-docshub-staging-104417-authRole",
+      "UnauthRoleArn": "arn:aws:iam::852459778358:role/amplify-docshub-staging-104417-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::852459778358:role/amplify-docshub-staging-104417-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-docshub-staging-104417-deployment",
+      "UnauthRoleName": "amplify-docshub-staging-104417-unauthRole",
+      "StackName": "amplify-docshub-staging-104417",
+      "StackId": "arn:aws:cloudformation:eu-central-1:852459778358:stack/amplify-docshub-staging-104417/ca79c550-e67a-11ed-8d7d-027cbf3a81e2",
+      "AmplifyAppId": "d3mgme5apn211h"
+    },
+    "categories": {
+      "auth": {
+        "docshub": {
+          "allowUnauthenticatedIdentities": true,
+          "authRoleArn": "arn:aws:iam::852459778358:role/Cognito_docshubidentitiesAuth_Role",
+          "authRoleName": "Cognito_docshubidentitiesAuth_Role",
+          "identityPoolId": "eu-central-1:04df3e29-e4f0-4445-bac4-9bcb23bdd9ff",
+          "identityPoolName": "docshub-identities",
+          "nativeClientId": "4atu3vg41mojo1ge0o0qujopn9",
+          "unauthRoleArn": "arn:aws:iam::852459778358:role/Cognito_docshubidentitiesUnauth_Role",
+          "unauthRoleName": "Cognito_docshubidentitiesUnauth_Role",
+          "userPoolId": "eu-central-1_PQInK2hdy",
+          "userPoolName": "dochub-users",
+          "webClientId": "4atu3vg41mojo1ge0o0qujopn9"
+        }
+      },
+      "storage": {
+        "s3docshubstorage": {}
+      }
+    }
+  }
+}
