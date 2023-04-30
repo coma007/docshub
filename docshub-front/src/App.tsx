@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { Storage } from 'aws-amplify';
 import { FileUploader, Collection, Image, Button, withAuthenticator, useAuthenticator } from "@aws-amplify/ui-react"
 import "@aws-amplify/ui-react/styles.css"
 import { S3ProviderListOutputItem } from '@aws-amplify/storage';
+import { useEffect, useState } from 'react';
 
 function App() {
 
@@ -29,6 +28,7 @@ function App() {
 
   const onSuccess = (event: { key: string }) => {
     fetchImages()
+    // TODO save to dynamo
   }
 
   return (
