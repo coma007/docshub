@@ -85,6 +85,7 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
                             showImages={true}
                             hasMultipleFiles={false}
                             onSuccess={onSuccess}
+                            
                         />
                     </div>
                     <div className={FileUploadModalCSS.form}>
