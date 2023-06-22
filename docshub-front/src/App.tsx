@@ -1,7 +1,7 @@
 import './App.css';
 import { withAuthenticator, useAuthenticator, Button } from "@aws-amplify/ui-react"
 import "@aws-amplify/ui-react/styles.css"
-import FileUploadPage from './features/file-upload/pages/file-upload-page';
+import FileUploadPage from './features/file-list/pages/FileUploadPage';
 
 function App() {
 

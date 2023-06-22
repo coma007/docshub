@@ -1,4 +1,4 @@
-import { Tag } from "./file-tag";
+import { Tag } from "./Tag";
 
 export interface FileMetadata {
     albumId: string,
@@ -7,5 +7,5 @@ export interface FileMetadata {
     fileSize: number,
     description: string,
     dateOfCreation: Date,
-    tags: Tag[]
+    tags: string[]
 }

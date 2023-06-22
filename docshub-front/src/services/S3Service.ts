@@ -28,6 +28,17 @@ const S3Service = {
                 console.log('Error:', error);
             });
         return contentType;
+    },
+
+    removeFile: async function (fileId: string) {
+        try {
+            await Storage.remove(fileId, { level: 'public' });
+            console.log('File removed successfully');
+            return true;
+        } catch (error) {
+            console.log('Error removing file:', error);
+            return false;
+        }
     }
 }
 
