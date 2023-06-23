@@ -15,8 +15,8 @@
     grid-template-columns: 2fr 1fr;
     column-gap: 20px;
     padding: 20px 50px;
-    height: 78vh;
-    max-height: 78vh;
+    height: 75vh;
+    max-height: 75vh;
 }
 
 .list {
@@ -37,6 +37,7 @@
 
 .item:hover {
     box-shadow: rgba(0, 0, 0, 0.20) 0px 1px 4px;
+    background-color: #047d9505;
     cursor: pointer;
 }
 
