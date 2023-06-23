@@ -2,14 +2,14 @@ import './App.css';
 import { withAuthenticator, useAuthenticator, Button } from "@aws-amplify/ui-react"
 import "@aws-amplify/ui-react/styles.css"
 import FileListPage from './features/file-list/pages/FileListPage';
+import Navigation from './components/Navigation/Navigation';
 
 function App() {
 
-  const { signOut } = useAuthenticator((context) => [context.signOut])
-
+  
   return (
     <div className="App">
-      <Button onClick={signOut}>Sign out</Button>
+      <Navigation />
       <FileListPage />
     </div >
   );

@@ -1,9 +1,12 @@
-import { Collection, Image, Button, Card, Text } from "@aws-amplify/ui-react"
+import { Collection, Image, Button, Card, Text, Heading } from "@aws-amplify/ui-react"
 import "@aws-amplify/ui-react/styles.css"
 import { S3ProviderListOutputItem } from '@aws-amplify/storage';
 import { useEffect, useState } from 'react';
 import S3Service from '../../../services/S3Service';
 import FileUploadModal from "../../file-upload/components/FileUploadModal";
+import FileListPageCSS from "./FileListPage.module.css"
+
+
 
 function FileListPage() {
 
@@ -51,40 +54,55 @@ function FileListPage() {
 
     return (
         <div>
-            <Button onClick={handleAddFile}>Add file</Button>
             <FileUploadModal isOpenModal={isOpenModal} closeModal={closeModal} fetchImages={fetchImages}></FileUploadModal>
-
-            <Collection
-                items={images}
-                type="grid"
-                templateColumns="1fr 1fr 1fr 1fr"
-                columnGap="20px"
-                rowGap="20px"
-            >
-
-                {(item, index) => (
-                    <Card key={index} padding="0px" height="300px">
-                        {fileTypes[index] === "image" &&
-                            <Image src={item} height="300px" width="100%" alt="" objectFit="cover" />
-                        }
-                        {fileTypes[index] === "application" &&
-                            <span>application</span>
-                        }
-                        {fileTypes[index] === "video" &&
-                            <span>application</span>
-                        }
-                        {fileTypes[index] === "audio" &&
-                            <span>application</span>
-                        }
-                        {fileTypes[index] === "text" &&
-                            <span>application</span>
-                        }
-                        <a href={item}>Download</a>
-                        <Text>{imageKeys[index + 1]?.key}</Text>
+            <div className={FileListPageCSS.navigation}>
+                <Heading className={FileListPageCSS.title} level={5}>Album explorer</Heading>
+                <Button onClick={handleAddFile}>Add file</Button>
+            </div>
+            <div className={FileListPageCSS.content}>
+                <div className={FileListPageCSS.list}>
+                    <Card key="header"
+                        className={FileListPageCSS.header}>
+                        <span></span>
+                        <Text>title</Text>
+                        <span ></span>
                     </Card>
-                )}
-            </Collection>
-        </div>
+                    <Collection
+                        items={images}
+                        type="list"
+                        gap="5px"
+                    >
+                        {(item, index) => (
+                            <Card key={index}
+                                className={FileListPageCSS.item}>
+                                <span className={FileListPageCSS.image}>
+                                    {fileTypes[index] === "image" &&
+                                        <Image src={item} className={FileListPageCSS.image} alt="image" />
+                                    }
+                                    {fileTypes[index] === "application" &&
+                                        <Image src="/types/application.png" className={FileListPageCSS.image} alt="app" />
+                                    }
+                                    {fileTypes[index] === "video" &&
+                                        <Image src="/types/video.png" className={FileListPageCSS.image} alt="vid" />
+                                    }
+                                    {fileTypes[index] === "audio" &&
+                                        <Image src="/types/audio.png" className={FileListPageCSS.image} alt="aud" />
+                                    }
+                                    {fileTypes[index] === "text" &&
+                                        <Image src="/types/text.png" className={FileListPageCSS.image} alt="txt" />
+                                    }
+                                </span>
+                                <Text>{imageKeys[index + 1]?.key}</Text>
+                                <a href={item}>Download</a>
+                            </Card>
+                        )}
+                    </Collection>
+                </div>
+                <div className={FileListPageCSS.details}>
+
+                </div>
+            </div>
+        </div >
     );
 
 }
