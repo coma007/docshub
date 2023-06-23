@@ -39,7 +39,7 @@ const S3Service = {
             console.log('Error removing file:', error);
             return false;
         }
-    }
+    },
 }
 
 export default S3Service;

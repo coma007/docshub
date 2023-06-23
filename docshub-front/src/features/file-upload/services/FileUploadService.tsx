@@ -1,17 +1,16 @@
 import axios from 'axios';
-import { upload_url } from '../../../api';
+import { UPLOAD_FILE_URL } from '../../../api';
 import { FileMetadata } from '../../../types/FileMetadata';
 
 const FileUploadService = {
 
-    upload_image: function (data: FileMetadata): Promise<boolean> {
-        return axios.post(upload_url, data)
-            .then(response => {
-                return response.status === 200;
-            })
-            .catch(error => {
-                return false;
-            });
+    upload_image: async function (data: FileMetadata): Promise<boolean> {
+        try {
+            const response = await axios.post(UPLOAD_FILE_URL(), data);
+            return response.status === 200;
+        } catch (error) {
+            return false;
+        }
     }
 }
 

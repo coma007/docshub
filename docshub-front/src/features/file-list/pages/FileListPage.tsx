@@ -5,8 +5,7 @@ import { useEffect, useState } from 'react';
 import S3Service from '../../../services/S3Service';
 import FileUploadModal from "../../file-upload/components/FileUploadModal";
 import FileListPageCSS from "./FileListPage.module.css"
-
-
+import FileDownloadService from "../services/FileDownloadService";
 
 function FileListPage() {
 
@@ -52,15 +51,21 @@ function FileListPage() {
         return type.split("/")[0];
     }
 
+    const downloadFile = (fileKey: string) => {
+        console.log(fileKey)
+        FileDownloadService.download_file(fileKey);
+    }
+
     return (
         <div>
             <FileUploadModal isOpenModal={isOpenModal} closeModal={closeModal} fetchImages={fetchImages}></FileUploadModal>
-            <div className={FileListPageCSS.navigation}>
-                <Heading className={FileListPageCSS.title} level={5}>Album explorer</Heading>
-                <Button onClick={handleAddFile}>Add file</Button>
-            </div>
             <div className={FileListPageCSS.content}>
                 <div className={FileListPageCSS.list}>
+                    <div className={FileListPageCSS.navigation}>
+                        <Heading className={FileListPageCSS.title} level={5}>Album explorer</Heading>
+                        <Button className={FileListPageCSS.accent} onClick={handleAddFile}>New file</Button>
+                        <Button className={FileListPageCSS.space} onClick={handleAddFile}>New album</Button>
+                    </div>
                     <Card key="header"
                         className={FileListPageCSS.header}>
                         <span></span>
@@ -93,7 +98,10 @@ function FileListPage() {
                                     }
                                 </span>
                                 <Text>{imageKeys[index + 1]?.key}</Text>
-                                <a href={item}>Download</a>
+                                <button className={FileListPageCSS.download} onClick={() => downloadFile(imageKeys[index + 1]?.key!)}>
+                                    <Image className={FileListPageCSS.image} alt="get" src="/actions/download.png" />
+                                </button>
+                                {/* <a href={item}>Download</a> */}
                             </Card>
                         )}
                     </Collection>
