@@ -98,10 +98,12 @@ function FileListPage() {
                                     }
                                 </span>
                                 <Text>{imageKeys[index + 1]?.key}</Text>
-                                <button className={FileListPageCSS.download} onClick={() => downloadFile(imageKeys[index + 1]?.key!)}>
+                                <button className={FileListPageCSS.buttonicon} onClick={() => downloadFile(imageKeys[index + 1]?.key!)}>
                                     <Image className={FileListPageCSS.image} alt="get" src="/actions/download.png" />
                                 </button>
-                                {/* <a href={item}>Download</a> */}
+                                <button className={FileListPageCSS.buttonicon}>
+                                    <Image className={FileListPageCSS.image} alt="del" src="/actions/delete.png" />
+                                </button>
                             </Card>
                         )}
                     </Collection>
