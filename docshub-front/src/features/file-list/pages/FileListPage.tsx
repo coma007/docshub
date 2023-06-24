@@ -6,6 +6,7 @@ import S3Service from '../../../services/S3Service';
 import FileUploadModal from "../../file-upload/components/FileUploadModal";
 import FileListPageCSS from "./FileListPage.module.css"
 import FileDownloadService from "../services/FileDownloadService";
+import FileDetailsComponent from "../components/FileDetailsComponent";
 
 function FileListPage() {
 
@@ -109,7 +110,7 @@ function FileListPage() {
                     </Collection>
                 </div>
                 <div className={FileListPageCSS.details}>
-
+                    <FileDetailsComponent selectedFile={null}/>
                 </div>
             </div>
         </div >
