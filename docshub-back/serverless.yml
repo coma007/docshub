@@ -58,6 +58,19 @@ package:
     - 'utils/**'
 
 functions:
+  get_file_metadata:
+    handler: get_file_metadata/handler.get_file_metadata
+    package: 
+      include: 'get_file_metadata/**'
+      events:
+        - http:
+            path: /api/get_file_metadata/{key}
+            method: post
+            cors: get
+            request:
+              parameters:
+                paths:
+                  key: true
   upload_file:
     handler: upload_file/handler.upload_file
     package: 
