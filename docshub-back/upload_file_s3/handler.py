@@ -1,3 +1,4 @@
+import base64
 import os
 import urllib
 
@@ -8,6 +9,9 @@ from utils.s3_config import s3, s3_bucket_name
 from utils.dynamodb_config import table
 
 from utils.response import create_response
+
+from cgi import parse_multipart, parse_header
+from io import BytesIO
 
 table = "meta"
 s3_client = boto3.client('s3')
@@ -26,9 +30,12 @@ def upload_file_s3(event, context):
         # bucket = event['Records'][0]['s3']['bucket']['name']
         # key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
 
+        form_data = parse_request(event)
+        print(form_data)
+
         local_file_path = "../.gitignore"
-        s3_name = "dummy"
-        s3.upload_file(local_file_path, os.environ['BUCKET_NAME'], s3_name)
+        s3_name = "asd/dummy"
+        s3.upload_file(local_file_path, s3_bucket_name, s3_name)
 
 
         # get url
@@ -51,7 +58,17 @@ def upload_file_s3(event, context):
         return create_response(200, "Succes")
 
     except Exception as e:
-        raise Exception('There has been an error')
+        raise Exception(e)
+
+def parse_request(event):
+    c_type, c_data = parse_header(event['headers']['Content-Type'])
+    assert c_type == 'multipart/form-data'
+    decoded_string = base64.b64decode(event['body'])
+    # For Python 3: these two lines of bugfixing are mandatory
+    # see also: https://stackoverflow.com/questions/31486618/cgi-parse-multipart-function-throws-typeerror-in-python-3
+    c_data['boundary'] = bytes(c_data['boundary'], "utf-8")
+    c_data['CONTENT-LENGTH'] = event['headers']['Content-length']
+    return parse_multipart(BytesIO(decoded_string), c_data)
 
 def scanRecursive(tableName, **kwargs):
     """
