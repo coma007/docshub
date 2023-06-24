@@ -13,6 +13,8 @@ function FileListPage() {
     const [imageKeys, setImageKeys] = useState<S3ProviderListOutputItem[]>([]);
     const [images, setImages] = useState<string[]>([]);
     const [fileTypes, setFileTypes] = useState<string[]>([]);
+    const [selectedFile, setSelectedFile] = useState<string | undefined>(undefined);
+    const [selectedImageSrc, setSelectedImageSrc] = useState<string | undefined>(undefined);
 
     useEffect(() => {
         fetchImages();
@@ -79,7 +81,10 @@ function FileListPage() {
                         gap="5px"
                     >
                         {(item, index) => (
-                            <Card key={index}
+                            <Card key={index} onClick={() => { 
+                                setSelectedFile(imageKeys[index + 1].key); 
+                                setSelectedImageSrc(item) 
+                            }}
                                 className={FileListPageCSS.item}>
                                 <span className={FileListPageCSS.image}>
                                     {fileTypes[index] === "image" &&
@@ -110,7 +115,7 @@ function FileListPage() {
                     </Collection>
                 </div>
                 <div className={FileListPageCSS.details}>
-                    <FileDetailsComponent selectedFile={null}/>
+                    <FileDetailsComponent selectedFile={selectedFile} selectedImage={selectedImageSrc} />
                 </div>
             </div>
         </div >
