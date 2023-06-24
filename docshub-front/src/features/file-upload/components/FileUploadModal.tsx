@@ -3,15 +3,18 @@ import { Button, FileUploader, TextAreaField, TextField } from '@aws-amplify/ui-
 import React, { useState } from 'react'
 import Modal from "react-modal"
 import S3Service from '../../../services/S3Service'
-import { FileMetadata } from '../../../types/FileMetadata'
+import { FileMetadata, FileMetadataWithFile } from '../../../types/FileMetadata'
 import FileUploadService from '../services/FileUploadService'
 import FileUploadModalCSS from "./FileUploadModal.module.css"
 import { TagsInput } from "react-tag-input-component";
+
+import {decode as base64_decode, encode as base64_encode} from 'base-64';
 
 const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchImages: any }) => {
 
     const [description, setDescription] = useState<string>("");
     const [imageTags, setImageTags] = useState<string[]>([])
+    const [selectedFile, setSelectedFile] = useState<File>()
 
     const handleDescriptionChange = (event: any) => {
         setDescription(event.target.value);
@@ -19,6 +22,30 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
 
     const handleTagsChange = (tags: any) => {
         setImageTags(tags)
+    }
+
+    const getBase64 = (file: Blob) => {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
+    }
+
+    const onSubmit = () => {
+        const data: FileMetadataWithFile = {
+            albumId: "ALBUM",
+            fileSize: 123,
+            fileName: "Sqwdq",
+            fileType: "dqwdq",
+            description: description,
+            dateOfCreation: new Date(),
+            tags: imageTags,
+            file: "asdq"
+        };
+        FileUploadService.upload(data);
     }
 
     const onSuccess = async (event: { key: string }) => {
@@ -65,27 +92,15 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
             onRequestClose={props.closeModal}
         >
             <div className={FileUploadModalCSS.window}>
-                <button className={FileUploadModalCSS.close}
+                                <button className={FileUploadModalCSS.close}
                     onClick={props.closeModal}
                 >✖</button>
                 <h2>Add file to your gallery</h2>
-                <div className={FileUploadModalCSS.content}>
+                <form className={FileUploadModalCSS.content}>
                     <div className={"uploader"}>
-                        <FileUploader
+                        <input
                             // onChange={undefined}
-                            accessLevel="public"
-                            acceptedFileTypes={[
-                                'image/*',
-                                'audio/*',
-                                'video/*',
-                                'text/*',
-                                'application/*',
-                            ]}
-                            variation="drop"
-                            showImages={true}
-                            hasMultipleFiles={false}
-                            onSuccess={onSuccess}
-                            
+                            accept='image/*,audio/*,video/*,text/*,application/*'                          
                         />
                     </div>
                     <div className={FileUploadModalCSS.form}>
@@ -106,7 +121,8 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
                         />
                         <em>press enter to add new tag</em>
                     </div>
-                </div>
+                    <button type='submit' onClick={onSubmit}>Submit</button>
+                </form>
             </div>
         </Modal>
     )
