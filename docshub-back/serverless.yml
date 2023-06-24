@@ -69,10 +69,37 @@ functions:
             cors: true
   download_file:
     handler: download_file/handler.download_file
-    package: 
+    package:
       include: 'download_file/**'
       events:
         - http:
             path: /api/download-file
             method: get
             cors: true
+  upload_error_handling:
+    handler: upload_error_handling/handler.handle_error
+    package:
+      include: 'upload_error_handling/**'
+#      events:
+#        - http:
+#            path: /api/download-file
+#            method: get
+#            cors: true
+  upload_file_s3:
+    handler: upload_file_s3/handler.upload_file_s3
+    package:
+      include: 'upload_file_s3/**'
+#      events:
+#        - http:
+#            path: /api/download-file
+#            method: get
+#            cors: true
+  upload_success_handling:
+    handler: upload_success_handling/handler.handle_success
+    package:
+      include: 'upload_success_handling/**'
+#      events:
+#        - http:
+#            path: /api/download-file
+#            method: get
+#            cors: true
