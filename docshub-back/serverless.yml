@@ -67,6 +67,7 @@ functions:
             path: /api/upload-file
             method: post
             cors: true
+
   download_file:
     handler: download_file/handler.download_file
     package:
@@ -85,6 +86,10 @@ functions:
 #            path: /api/download-file
 #            method: get
 #            cors: true
+    Properties:
+      Environment:
+        Variables:
+          DEBUG_LOGGING_ENABLED: true
   upload_file_s3:
     handler: upload_file_s3/handler.upload_file_s3
     package:
@@ -94,6 +99,10 @@ functions:
 #            path: /api/download-file
 #            method: get
 #            cors: true
+    Properties:
+      Environment:
+        Variables:
+          DEBUG_LOGGING_ENABLED: true
   upload_success_handling:
     handler: upload_success_handling/handler.handle_success
     package:
@@ -103,3 +112,7 @@ functions:
 #            path: /api/download-file
 #            method: get
 #            cors: true
+    Properties:
+      Environment:
+        Variables:
+          DEBUG_LOGGING_ENABLED: true

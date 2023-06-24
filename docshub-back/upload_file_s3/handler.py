@@ -13,6 +13,12 @@ from utils.response import create_response
 from cgi import parse_multipart, parse_header
 from io import BytesIO
 
+import json_logger
+
+import logging
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
 table = "meta"
 s3_client = boto3.client('s3')
 dynamo_client = boto3.client('dynamodb')
@@ -32,10 +38,17 @@ def upload_file_s3(event, context):
 
         form_data = parse_request(event)
         print(form_data)
+        logger.debug(event)
+        logger.debug(form_data)
 
-        local_file_path = "../.gitignore"
-        s3_name = "asd/dummy"
-        s3.upload_file(local_file_path, s3_bucket_name, s3_name)
+        logger.info(event)
+        logger.info(form_data)
+
+        return create_response(200, event)
+
+        # local_file_path = "../.gitignore"
+        # s3_name = "asd/dummy"
+        # s3.upload_file(local_file_path, s3_bucket_name, s3_name)
 
 
         # get url
