@@ -1,9 +1,9 @@
 import { S3ProviderListOutputItem } from '@aws-amplify/storage'
 import { Button, FileUploader, TextAreaField, TextField } from '@aws-amplify/ui-react'
-import React, { useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import Modal from "react-modal"
 import S3Service from '../../../services/S3Service'
-import { FileMetadata } from '../../../types/FileMetadata'
+import { FileMetadata, FileMetadataWithFile } from '../../../types/FileMetadata'
 import FileUploadService from '../services/FileUploadService'
 import FileUploadModalCSS from "./FileUploadModal.module.css"
 import { TagsInput } from "react-tag-input-component";
@@ -11,7 +11,9 @@ import { TagsInput } from "react-tag-input-component";
 const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchImages: any }) => {
 
     const [description, setDescription] = useState<string>("");
-    const [imageTags, setImageTags] = useState<string[]>([])
+    const [imageTags, setImageTags] = useState<string[]>([]);
+    const [selectedFile, setSelectedFile] = useState<File>();
+    const [selectedFileBase64, setSelectedFileBase64] = useState<string>();
 
     const handleDescriptionChange = (event: any) => {
         setDescription(event.target.value);
@@ -21,19 +23,43 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
         setImageTags(tags)
     }
 
-    const onSuccess = async (event: { key: string }) => {
-        let object = await S3Service.getFileMetadata(event.key);
-        const data: FileMetadata = {
+    const onFileChanged = (e: ChangeEvent<HTMLInputElement>) =>{
+        setSelectedFile(e.target.files![0]);
+    }
+
+    useEffect(() => {
+        const reader = new FileReader();
+    
+        if(selectedFile !== undefined){
+          reader.onloadend = (e) => {
+            let base64 = e.target?.result as string;
+            let tokens = base64.split(",");
+            if(tokens.length >= 2){
+              setSelectedFileBase64(tokens[1]);
+            }
+         };
+        reader.readAsDataURL(selectedFile);
+        }
+      }, [selectedFile]); 
+
+    const proccessData = async () =>{
+        // TODO validate types
+        // if(selectedFile?.type){
+
+        // }
+
+        const data: FileMetadataWithFile = {
             albumId: "ALBUM",
-            fileSize: object.size,
-            fileName: object.key,
-            fileType: object.contentType,
+            fileSize: selectedFile!.size,
+            fileName: selectedFile!.name,
+            fileType: selectedFile!.type,
             description: description,
-            dateOfCreation: new Date(object.lastModified),
-            tags: imageTags
+            dateOfCreation: new Date(selectedFile!.lastModified),
+            tags: imageTags,
+            file: selectedFileBase64!
         };
 
-        FileUploadService.upload_image(data)
+        FileUploadService.upload(data)
             .then(async result => {
                 if (result !== true) {
                     await S3Service.removeFile(data.fileName)
@@ -44,7 +70,11 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
             })
         await props.fetchImages();
         props.closeModal();
-    };
+    }
+
+    const onSubmit = async () => {
+        proccessData();
+    }
 
     Modal.setAppElement('#root')
     return (
@@ -71,22 +101,9 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
                 <h2>Add file to your gallery</h2>
                 <div className={FileUploadModalCSS.content}>
                     <div className={"uploader"}>
-                        <FileUploader
-                            // onChange={undefined}
-                            accessLevel="public"
-                            acceptedFileTypes={[
-                                'image/*',
-                                'audio/*',
-                                'video/*',
-                                'text/*',
-                                'application/*',
-                            ]}
-                            variation="drop"
-                            showImages={true}
-                            hasMultipleFiles={false}
-                            onSuccess={onSuccess}
-                            
-                        />
+                        <input
+                            type="file" accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"
+                            onChange={(event)=> { onFileChanged(event) }}/>
                     </div>
                     <div className={FileUploadModalCSS.form}>
                         <h3>Additional file information</h3>
@@ -106,10 +123,10 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
                         />
                         <em>press enter to add new tag</em>
                     </div>
+                    <button onClick={onSubmit}>Submit</button>
                 </div>
             </div>
         </Modal>
-    )
+    );
 }
-
-export default FileUploadModal
+export default FileUploadModal;

@@ -10,8 +10,8 @@ from utils.response import create_response
 def handle_error(event, context):
 
     try:
-        body = json.loads(event['body'])
-        return create_response(500, body)
+        error = event['error']
+        return create_response(500, error["Cause"])
 
     except Exception as e:
 
