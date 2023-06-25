@@ -10,7 +10,7 @@ from utils.response import create_response
 def upload_file(event, context):
 
     try:
-        body = json.loads(event['body'])
+        body = event['body']
         file_id = body['fileName']
         album_id = body['albumId']
         file_size = body['fileSize']
@@ -35,4 +35,4 @@ def upload_file(event, context):
 
     except Exception as e:
 
-        return create_response(500, e)
+        raise Exception(e)
