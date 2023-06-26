@@ -8,6 +8,7 @@ import FileDetailsComponentCSS from "./FileDetailsComponent.module.css"
 import FileDownloadService from "../services/FileDownloadService";
 import FileMetadataService from "../services/FileMetadataService";
 import { FileMetadata } from "../../../types/FileMetadata";
+import { formatDateTime, formatFileSize } from "../../../utils/fomaters";
 
 function FileDetailsComponent(props: { selectedFile: string | undefined, selectedImage: string | undefined }) {
 
@@ -18,7 +19,6 @@ function FileDetailsComponent(props: { selectedFile: string | undefined, selecte
             FileMetadataService.get_file_metadata(props.selectedFile)
                 .then(response => {
                     setData(response);
-                    console.log(data)
                 })
                 .catch(error => {
                     console.log(error);
@@ -30,41 +30,48 @@ function FileDetailsComponent(props: { selectedFile: string | undefined, selecte
         <div className={FileDetailsComponentCSS.component}>
             {props.selectedFile !== undefined ?
                 <div>
-                    
+
                     {data?.fileType?.includes("image") &&
                         <Image src={props.selectedImage} className={FileDetailsComponentCSS.image} alt="image" />
                     }
                     {data?.fileType?.includes("application") &&
-                        <Image src="/types/application.png" className={FileDetailsComponentCSS.image} alt="app" />
+                        <Image src="/types/application.png" alt="app" />
                     }
                     {data?.fileType?.includes("video") &&
-                        <Image src="/types/video.png" className={FileDetailsComponentCSS.image} alt="vid" />
+                        <Image src="/types/video.png" alt="vid" />
                     }
                     {data?.fileType?.includes("audio") &&
-                        <Image src="/types/audio.png" className={FileDetailsComponentCSS.image} alt="aud" />
+                        <Image src="/types/audio.png" alt="aud" />
                     }
                     {data?.fileType?.includes("text") &&
-                        <Image src="/types/text.png" className={FileDetailsComponentCSS.image} alt="txt" />
+                        <Image src="/types/text.png" alt="txt" />
                     }
 
                     <Text className={FileDetailsComponentCSS.title}>
                         {data?.fileName}</Text>
                     <div className={FileDetailsComponentCSS.tags}>
-                        {data?.tags.map((item, index) => (
+                        {data?.tags?.map((item, index) => (
                             <span className={FileDetailsComponentCSS.tag} key={index}>{item}</span>
                         ))}
                     </div>
                     <div className={FileDetailsComponentCSS.details}>
                         <div className={FileDetailsComponentCSS.detailItem}>
-                            <Text>Last modified</Text>
-                            <Text>{data?.dateOfCreation.toString()}</Text>
+                            <Text className={FileDetailsComponentCSS.label}>Last modified</Text>
+                            <Text>{formatDateTime(data?.dateOfCreation?.toString()!)}</Text>
                         </div>
                         <div className={FileDetailsComponentCSS.detailItem}>
-                            <Text>Content type</Text>
-                            <Text>{data?.fileType}</Text>
+                            <Text className={FileDetailsComponentCSS.label}>Content type</Text>
+                            <Text>{data?.fileType!}</Text>
+                        </div>
+                        <div className={FileDetailsComponentCSS.detailItem}>
+                            <Text className={FileDetailsComponentCSS.label}>Size</Text>
+                            <Text>{formatFileSize(data?.fileSize!)}</Text>
                         </div>
                     </div>
-                    <Text className={FileDetailsComponentCSS.description}>Opis datoteke</Text>
+                    <Text className={FileDetailsComponentCSS.description}>
+                        <div className={FileDetailsComponentCSS.label}>Description</div>
+                        <div>{data?.description!}</div>
+                    </Text>
                 </div>
                 :
                 <div className={FileDetailsComponentCSS.nofile}>No file selected</div>

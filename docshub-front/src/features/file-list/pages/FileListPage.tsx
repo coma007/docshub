@@ -8,8 +8,11 @@ import FileListPageCSS from "./FileListPage.module.css"
 import FileDownloadService from "../services/FileDownloadService";
 import FileDetailsComponent from "../components/FileDetailsComponent";
 import FileDeleteService from "../services/FileDeleteService";
+import { getCurrentSessionSub } from "../../../utils/session";
 
 function FileListPage() {
+
+    getCurrentSessionSub();
 
     const [imageKeys, setImageKeys] = useState<S3ProviderListOutputItem[]>([]);
     const [images, setImages] = useState<string[]>([]);
@@ -56,7 +59,6 @@ function FileListPage() {
     }
 
     const downloadFile = (fileKey: string) => {
-        console.log(fileKey)
         FileDownloadService.download_file(fileKey);
     }
 
@@ -87,9 +89,9 @@ function FileListPage() {
                         gap="5px"
                     >
                         {(item, index) => (
-                            <Card key={index} onClick={() => { 
-                                setSelectedFile(imageKeys[index + 1].key); 
-                                setSelectedImageSrc(item) 
+                            <Card key={index} onClick={() => {
+                                setSelectedFile(imageKeys[index + 1].key);
+                                setSelectedImageSrc(item)
                             }}
                                 className={FileListPageCSS.item}>
                                 <span className={FileListPageCSS.image}>
