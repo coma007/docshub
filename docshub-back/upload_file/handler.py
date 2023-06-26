@@ -3,15 +3,18 @@ import json
 
 from utils.s3_config import s3, s3_bucket_name
 from utils.dynamodb_config import table
-
+import uuid
 from utils.response import create_response
 
+
+id_db=uuid.uuid4()
 
 def upload_file(event, context):
 
     try:
         body = event['body']
-        file_id = body['fileName']
+        file_id = id_db.hex
+        file_name = body['fileName']
         album_id = body['albumId']
         file_size = body['fileSize']
         file_type = body['fileType']
@@ -24,7 +27,7 @@ def upload_file(event, context):
             'file_id': file_id,
             'file_size': file_size,
             'file_type': file_type,
-            'name': file_id,
+            'file_name': file_name,
             'description': description,
             'creation_date': creation_date,
             'last_change_date': creation_date,
