@@ -7,6 +7,7 @@ import FileUploadModal from "../../file-upload/components/FileUploadModal";
 import FileListPageCSS from "./FileListPage.module.css"
 import FileDownloadService from "../services/FileDownloadService";
 import FileDetailsComponent from "../components/FileDetailsComponent";
+import FileDeleteService from "../services/FileDeleteService";
 
 function FileListPage() {
 
@@ -59,6 +60,11 @@ function FileListPage() {
         FileDownloadService.download_file(fileKey);
     }
 
+    const deleteFile = (fileKey: string) => {
+        console.log(fileKey)
+        FileDeleteService.delete_image(fileKey);
+    }
+
     return (
         <div>
             <FileUploadModal isOpenModal={isOpenModal} closeModal={closeModal} fetchImages={fetchImages}></FileUploadModal>
@@ -107,7 +113,7 @@ function FileListPage() {
                                 <button className={FileListPageCSS.buttonicon} onClick={() => downloadFile(imageKeys[index + 1]?.key!)}>
                                     <Image className={FileListPageCSS.image} alt="get" src="/actions/download.png" />
                                 </button>
-                                <button className={FileListPageCSS.buttonicon}>
+                                <button className={FileListPageCSS.buttonicon} onClick={() => deleteFile(imageKeys[index + 1]?.key!)}>
                                     <Image className={FileListPageCSS.image} alt="del" src="/actions/delete.png" />
                                 </button>
                             </Card>

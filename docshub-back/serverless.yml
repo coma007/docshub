@@ -18,7 +18,7 @@ service: docshub-back
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 provider:
   name: aws
@@ -54,14 +54,14 @@ provider:
 package:
   individually: true
   patterns:
-    - '!**/**'
-    - 'utils/**'
+    - "!**/**"
+    - "utils/**"
 
 functions:
   get_file_metadata:
     handler: get_file_metadata/handler.get_file_metadata
-    package: 
-      include: 'get_file_metadata/**'
+    package:
+      include: "get_file_metadata/**"
       events:
         - http:
             path: /api/get_file_metadata/{key}
@@ -73,8 +73,8 @@ functions:
                   key: true
   upload_file:
     handler: upload_file/handler.upload_file
-    package: 
-      include: 'upload_file/**'
+    package:
+      include: "upload_file/**"
       events:
         - http:
             path: /api/upload-file
@@ -83,7 +83,7 @@ functions:
   download_file:
     handler: download_file/handler.download_file
     package:
-      include: 'download_file/**'
+      include: "download_file/**"
       events:
         - http:
             path: /api/download-file
@@ -92,27 +92,36 @@ functions:
   upload_error_handling:
     handler: upload_error_handling/handler.handle_error
     package:
-      include: 'upload_error_handling/**'
-#      events:
-#        - http:
-#            path: /api/download-file
-#            method: get
-#            cors: true
+      include: "upload_error_handling/**"
+  #      events:
+  #        - http:
+  #            path: /api/download-file
+  #            method: get
+  #            cors: true
   upload_file_s3:
     handler: upload_file_s3/handler.upload_file_s3
     package:
-      include: 'upload_file_s3/**'
-#      events:
-#        - http:
-#            path: /api/download-file
-#            method: get
-#            cors: true
+      include: "upload_file_s3/**"
+  #      events:
+  #        - http:
+  #            path: /api/download-file
+  #            method: get
+  #            cors: true
   upload_success_handling:
     handler: upload_success_handling/handler.handle_success
     package:
-      include: 'upload_success_handling/**'
-#      events:
-#        - http:
-#            path: /api/download-file
-#            method: get
-#            cors: true
+      include: "upload_success_handling/**"
+  #      events:
+  #        - http:
+  #            path: /api/download-file
+  #            method: get
+  #            cors: true
+  delete_file:
+    handler: delete_file/handler.delete_file
+    package:
+      include: "delete_file/**"
+      events:
+        - http:
+            path: /api/delete-file
+            method: delete
+            cors: true
