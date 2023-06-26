@@ -23,26 +23,27 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
         setImageTags(tags)
     }
 
-    const onFileChanged = (e: ChangeEvent<HTMLInputElement>) =>{
+    const onFileChanged = (e: ChangeEvent<HTMLInputElement>) => {
+        console.log(e.target.files![0])
         setSelectedFile(e.target.files![0]);
     }
 
     useEffect(() => {
         const reader = new FileReader();
-    
-        if(selectedFile !== undefined){
-          reader.onloadend = (e) => {
-            let base64 = e.target?.result as string;
-            let tokens = base64.split(",");
-            if(tokens.length >= 2){
-              setSelectedFileBase64(tokens[1]);
-            }
-         };
-        reader.readAsDataURL(selectedFile);
-        }
-      }, [selectedFile]); 
 
-    const proccessData = async () =>{
+        if (selectedFile !== undefined) {
+            reader.onloadend = (e) => {
+                let base64 = e.target?.result as string;
+                let tokens = base64.split(",");
+                if (tokens.length >= 2) {
+                    setSelectedFileBase64(tokens[1]);
+                }
+            };
+            reader.readAsDataURL(selectedFile);
+        }
+    }, [selectedFile]);
+
+    const proccessData = async () => {
         // TODO validate types
         // if(selectedFile?.type){
 
@@ -100,10 +101,18 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
                 >✖</button>
                 <h2>Add file to your gallery</h2>
                 <div className={FileUploadModalCSS.content}>
-                    <div className={"uploader"}>
-                        <input
-                            type="file" accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"
-                            onChange={(event)=> { onFileChanged(event) }}/>
+                    <div>
+                        <div className={FileUploadModalCSS.uploader}>
+                            <input
+                                type="file"
+                                accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"
+                                onChange={(event) => { onFileChanged(event) }}
+                            />
+                        </div>
+                        <TextField className={FileUploadModal.name}
+                            placeholder='Input file name... '
+                            label='File name [required]:'
+                            value={selectedFile?.name} />
                     </div>
                     <div className={FileUploadModalCSS.form}>
                         <h3>Additional file information</h3>
@@ -123,8 +132,8 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
                         />
                         <em>press enter to add new tag</em>
                     </div>
-                    <button onClick={onSubmit}>Submit</button>
                 </div>
+                <Button onClick={onSubmit} className={FileUploadModalCSS.submit}>Add file</Button>
             </div>
         </Modal>
     );

@@ -14,7 +14,7 @@ def get_file_metadata(event, context):
             TableName=table_name,
             Key={
                 'album_id': 'ALBUM',
-                'file': fileKey
+                'file_id': fileKey
             }
         )
         return create_response(200, response['Item'])
