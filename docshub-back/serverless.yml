@@ -24,7 +24,6 @@ provider:
   name: aws
   runtime: python3.10
 
-
 package:
   individually: true
   patterns:
@@ -33,9 +32,9 @@ package:
 
 functions:
   add_user_to_group:
-      handler: add_user_to_group/handler.add_user_to_group
-      package:
-        include: "add_user_to_group/**"
+    handler: add_user_to_group/handler.add_user_to_group
+    package:
+      include: "add_user_to_group/**"
   get_file_metadata:
     handler: get_file_metadata/handler.get_file_metadata
     package:
@@ -115,4 +114,13 @@ functions:
         - http:
             path: /api/create_album
             method: post
+            cors: true
+  delete_album:
+    handler: delete_album/handler.delete_album
+    package:
+      include: "delete_album/**"
+      events:
+        - http:
+            path: /api/delete_album
+            method: delete
             cors: true
