@@ -8,14 +8,12 @@ from utils.response import create_response
 
 
 def create_album(event, context):
-
     try:
-        body = event['body']
+        body = json.loads(event['body'])['data']
         parent_album_id = body['parentAlbumId']
         album_id = body['albumId']
         album_name = body['albumName']
     
-
         album_table.put_item(Item={
             'album_id': album_id,
             'parent_album_id': parent_album_id,

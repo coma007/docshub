@@ -9,10 +9,12 @@ import FileDownloadService from "../services/FileDownloadService";
 import FileDetailsComponent from "../components/FileDetailsComponent";
 import FileDeleteService from "../services/FileDeleteService";
 import { getCurrentSession, getCurrentSessionSub } from "../../../utils/session";
+// import { getCurrentSessionSub } from "../../../utils/session";
+import AlbumCreateModal from "../../album-create/components/AlbumCreateModal";
 
 function FileListPage() {
 
-    getCurrentSessionSub();
+    // getCurrentSessionSub();
 
     const [imageKeys, setImageKeys] = useState<S3ProviderListOutputItem[]>([]);
     const [images, setImages] = useState<string[]>([]);
@@ -45,13 +47,22 @@ function FileListPage() {
     }
 
     const [isOpenModal, setOpenModal] = useState(false);
+    const [isOpenAlbumCreateModal, setOpenAlbumCreateModal] = useState(false);
 
     const handleAddFile = () => {
         setOpenModal(true);
     };
 
+    const handleAlbumCreate = () => {
+        setOpenAlbumCreateModal(true);
+    };
+
     const closeModal = () => {
         setOpenModal(false);
+    };
+
+    const closeAlbumCreateModal = () => {
+        setOpenAlbumCreateModal(false);
     };
 
     async function getFileType(type: string): Promise<string> {
@@ -81,12 +92,13 @@ function FileListPage() {
     return (
         <div>
             <FileUploadModal isOpenModal={isOpenModal} closeModal={closeModal} fetchImages={fetchImages}></FileUploadModal>
+            <AlbumCreateModal isOpenModal={isOpenAlbumCreateModal} closeModal={closeAlbumCreateModal} fetchImages={fetchImages}></AlbumCreateModal>
             <div className={FileListPageCSS.content}>
                 <div className={FileListPageCSS.list}>
                     <div className={FileListPageCSS.navigation}>
                         <Heading className={FileListPageCSS.title} level={5}>Album explorer</Heading>
                         <Button className={FileListPageCSS.accent} onClick={handleAddFile}>New file</Button>
-                        <Button className={FileListPageCSS.space} onClick={handleAddFile}>New album</Button>
+                        <Button className={FileListPageCSS.space} onClick={handleAlbumCreate}>New album</Button>
                     </div>
                     <Card key="header"
                         className={FileListPageCSS.header}>
