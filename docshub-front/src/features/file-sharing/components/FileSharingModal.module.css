@@ -1,0 +1,35 @@
+.window {
+    padding: 5px 20px;
+}
+
+.window p {
+    margin-bottom: 40px;
+}
+
+.close {
+    position: absolute;
+    top: 50px;
+    right: 40px;
+    border: none;
+    background: transparent;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.submit {
+    margin-top: 20px;
+    background-color: #047d9546;
+    float: right;
+}
+
+.accent {
+    color: #047d95;
+}
+
+.permissions {
+    margin-top: 80px;
+}
+
+.scroll {
+    max-height: 150px;
+}

@@ -3,10 +3,12 @@ import { withAuthenticator, useAuthenticator, Button, Authenticator } from "@aws
 import "@aws-amplify/ui-react/styles.css"
 import FileListPage from './features/file-list/pages/FileListPage';
 import Navigation from './components/Navigation/Navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
 
 function App() {
+
+  const [option, setOption] = useState<string>("owned")
 
   const signUpFields = {
     signUp: {
@@ -22,8 +24,8 @@ function App() {
   return (
     <Authenticator formFields={signUpFields} >
       <div className="App">
-        <Navigation />
-        <FileListPage />
+        <Navigation option={option} changeOption={setOption} />
+        <FileListPage option={option} />
       </div >
     </Authenticator>
   );

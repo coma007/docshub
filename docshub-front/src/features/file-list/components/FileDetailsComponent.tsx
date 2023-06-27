@@ -28,7 +28,7 @@ function FileDetailsComponent(props: { selectedFile: string | undefined, selecte
 
     return (
         <div className={FileDetailsComponentCSS.component}>
-            {props.selectedFile !== undefined ?
+            {(props.selectedFile !== undefined && data?.fileId !== undefined) ?
                 <div>
 
                     {data?.fileType?.includes("image") &&
@@ -76,7 +76,7 @@ function FileDetailsComponent(props: { selectedFile: string | undefined, selecte
                 :
                 <div className={FileDetailsComponentCSS.nofile}>No file selected</div>
             }
-        </div>
+        </div >
     )
 }
 
