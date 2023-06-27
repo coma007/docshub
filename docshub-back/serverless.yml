@@ -24,33 +24,7 @@ provider:
   name: aws
   runtime: python3.10
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
 
-# you can add statements to the Lambda function's IAM Role here
-#  iam:
-#    role:
-#      statements:
-#        - Effect: "Allow"
-#          Action:
-#            - "s3:ListBucket"
-#          Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#        - Effect: "Allow"
-#          Action:
-#            - "s3:PutObject"
-#          Resource:
-#            Fn::Join:
-#              - ""
-#              - - "arn:aws:s3:::"
-#                - "Ref" : "ServerlessDeploymentBucket"
-#                - "/*"
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
 package:
   individually: true
   patterns:
@@ -62,60 +36,60 @@ functions:
     handler: get_file_metadata/handler.get_file_metadata
     package:
       include: "get_file_metadata/**"
-      events:
-        - http:
-            path: /api/get_file_metadata/{key}
-            method: post
-            cors: get
-            request:
-              parameters:
-                paths:
-                  key: true
+    events:
+      - http:
+          path: /api/get_file_metadata/{key}
+          method: get
+          cors: true
+          request:
+            parameters:
+              paths:
+                key: true
   upload_file:
     handler: upload_file/handler.upload_file
     package:
       include: "upload_file/**"
-      events:
-        - http:
-            path: /api/upload-file
-            method: post
-            cors: true
+    events:
+      - http:
+          path: /api/upload-file
+          method: post
+          cors: true
   download_file:
     handler: download_file/handler.download_file
     package:
       include: "download_file/**"
-      events:
-        - http:
-            path: /api/download-file
-            method: get
-            cors: true
+    events:
+      - http:
+          path: /api/download-file
+          method: get
+          cors: true
   upload_error_handling:
     handler: upload_error_handling/handler.handle_error
     package:
       include: "upload_error_handling/**"
-  #      events:
-  #        - http:
-  #            path: /api/download-file
-  #            method: get
-  #            cors: true
+    # events:
+    #   - http:
+    #       path: /api/download-file
+    #       method: get
+    #       cors: true
   upload_file_s3:
     handler: upload_file_s3/handler.upload_file_s3
     package:
       include: "upload_file_s3/**"
-  #      events:
-  #        - http:
-  #            path: /api/download-file
-  #            method: get
-  #            cors: true
+    # events:
+    #   - http:
+    #       path: /api/download-file
+    #       method: get
+    #       cors: true
   upload_success_handling:
     handler: upload_success_handling/handler.handle_success
     package:
       include: "upload_success_handling/**"
-  #      events:
-  #        - http:
-  #            path: /api/download-file
-  #            method: get
-  #            cors: true
+      # events:
+      #   - http:
+      #       path: /api/download-file
+      #       method: get
+      #       cors: true
   delete_file:
     handler: delete_file/handler.delete_file
     package:
