@@ -19,7 +19,8 @@ def upload_file_s3(event, context):
     print(event)
     file_base64 = event["body"]['file']
     file_name = event["body"]["fileName"]
-    obj = s3.put_object(Bucket=s3_bucket_name,Body=base64.b64decode(file_base64),Key="public/"+file_name)
+    album_id = event["body"]["albumId"]
+    obj = s3.put_object(Bucket=s3_bucket_name,Body=base64.b64decode(file_base64),Key="public/"+album_id+"/"+file_name)
 
     return create_response(200, event["body"])
 

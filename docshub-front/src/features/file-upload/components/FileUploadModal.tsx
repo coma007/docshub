@@ -7,6 +7,7 @@ import { FileMetadata, FileMetadataWithFile } from '../../../types/FileMetadata'
 import FileUploadService from '../services/FileUploadService'
 import FileUploadModalCSS from "./FileUploadModal.module.css"
 import { TagsInput } from "react-tag-input-component";
+import { getCurrentSessionSub } from '../../../utils/session'
 
 const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchImages: any }) => {
 
@@ -48,29 +49,30 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
         // if(selectedFile?.type){
 
         // }
-
-        const data: FileMetadataWithFile = {
-            albumId: "ALBUM",
-            fileSize: selectedFile!.size,
-            fileName: selectedFile!.name,
-            fileType: selectedFile!.type,
-            description: description,
-            dateOfCreation: new Date(selectedFile!.lastModified),
-            tags: imageTags,
-            file: selectedFileBase64!
-        };
-
-        FileUploadService.upload(data)
-            .then(async result => {
-                if (result !== true) {
-                    await S3Service.removeFile(data.fileName)
-                }
-            })
-            .catch(error => {
-                console.log("error:", error)
-            })
-        await props.fetchImages();
-        props.closeModal();
+        getCurrentSessionSub().then(async result =>{
+            const data: FileMetadataWithFile = {
+                albumId: result,
+                fileSize: selectedFile!.size,
+                fileName: selectedFile!.name,
+                fileType: selectedFile!.type,
+                description: description,
+                dateOfCreation: new Date(selectedFile!.lastModified),
+                tags: imageTags,
+                file: selectedFileBase64!
+            };
+    
+            FileUploadService.upload(data)
+                .then(async result => {
+                    if (result !== true) {
+                        await S3Service.removeFile(data.fileName)
+                    }
+                })
+                .catch(error => {
+                    console.log("error:", error)
+                })
+            await props.fetchImages();
+            props.closeModal();
+        }).catch(e => console.log(e));
     }
 
     const onSubmit = async () => {
