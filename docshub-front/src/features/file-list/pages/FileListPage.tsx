@@ -55,7 +55,18 @@ function FileListPage() {
     };
 
     async function getFileType(type: string): Promise<string> {
+        if (type.split("/")[1].includes("directory")) {
+            return "directory"
+        }
         return type.split("/")[0];
+    }
+
+    const getFileName = (filePath: string): string => {
+        let segments = filePath.split("/")
+        if (segments.at(-1) == "") {
+            segments.pop()
+        }
+        return segments.at(-1)!
     }
 
     const downloadFile = (fileKey: string) => {
@@ -110,11 +121,18 @@ function FileListPage() {
                                     {fileTypes[index] === "text" &&
                                         <Image src="/types/text.png" className={FileListPageCSS.image} alt="txt" />
                                     }
+                                    {fileTypes[index] === "directory" &&
+                                        <Image src="/types/directory.png" className={FileListPageCSS.image} alt="dir" />
+                                    }
                                 </span>
-                                <Text>{imageKeys[index + 1]?.key}</Text>
-                                <button className={FileListPageCSS.buttonicon} onClick={() => downloadFile(imageKeys[index + 1]?.key!)}>
-                                    <Image className={FileListPageCSS.image} alt="get" src="/actions/download.png" />
-                                </button>
+                                <Text>{getFileName(imageKeys[index + 1]?.key!)}</Text>
+                                {fileTypes[index] != "directory" ?
+                                    <button className={FileListPageCSS.buttonicon} onClick={() => downloadFile(imageKeys[index + 1]?.key!)}>
+                                        <Image className={FileListPageCSS.image} alt="get" src="/actions/download.png" />
+                                    </button>
+                                    :
+                                    <div></div>
+                                }
                                 <button className={FileListPageCSS.buttonicon} onClick={() => deleteFile(imageKeys[index + 1]?.key!)}>
                                     <Image className={FileListPageCSS.image} alt="del" src="/actions/delete.png" />
                                 </button>
