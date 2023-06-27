@@ -1,16 +1,11 @@
-import { S3ProviderListOutputItem } from '@aws-amplify/storage'
 import { Button, FileUploader, TextAreaField, TextField } from '@aws-amplify/ui-react'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import Modal from "react-modal"
-import S3Service from '../../../services/S3Service'
-import { FileMetadata, FileMetadataWithFile } from '../../../types/FileMetadata'
-import FileUploadService from '../services/AlbumCreateService'
 import AlbumCreateModalCSS from "./AlbumCreateModal.module.css"
-import { TagsInput } from "react-tag-input-component";
 import { AlbumMetadata } from '../../../types/AlbumMetadata'
 import AlbumCreateService from '../services/AlbumCreateService'
 
-const AlbumCreateModal = (props: { isOpenModal: boolean, closeModal: any, fetchImages: any, currentAlbumId: string | undefined }) => {
+const AlbumCreateModal = (props: { isOpenModal: boolean, closeModal: any, currentAlbumId: string | undefined }) => {
 
     const [albumName, setAlbumName] = useState<string>("");
 
