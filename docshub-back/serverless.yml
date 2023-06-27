@@ -32,37 +32,41 @@ package:
     - "utils/**"
 
 functions:
+  add_user_to_group:
+      handler: add_user_to_group/handler.add_user_to_group
+      package:
+        include: "add_user_to_group/**"
   get_file_metadata:
     handler: get_file_metadata/handler.get_file_metadata
     package:
       include: "get_file_metadata/**"
-    events:
-      - http:
-          path: /api/get_file_metadata/{key}
-          method: get
-          cors: true
-          request:
-            parameters:
-              paths:
-                key: true
+      events:
+        - http:
+            path: /api/get_file_metadata/{key}
+            method: get
+            cors: true
+            request:
+              parameters:
+                paths:
+                  key: true
   upload_file:
     handler: upload_file/handler.upload_file
     package:
       include: "upload_file/**"
-    events:
-      - http:
-          path: /api/upload-file
-          method: post
-          cors: true
+      events:
+        - http:
+            path: /api/upload-file
+            method: post
+            cors: true
   download_file:
     handler: download_file/handler.download_file
     package:
       include: "download_file/**"
-    events:
-      - http:
-          path: /api/download-file
-          method: get
-          cors: true
+      events:
+        - http:
+            path: /api/download-file
+            method: get
+            cors: true
   upload_error_handling:
     handler: upload_error_handling/handler.handle_error
     package:
@@ -94,11 +98,11 @@ functions:
     handler: delete_file/handler.delete_file
     package:
       include: "delete_file/**"
-    events:
-      - http:
-          path: /api/delete-file
-          method: delete
-          cors: true
+      events:
+        - http:
+            path: /api/delete-file
+            method: delete
+            cors: true
   update_file:
     handler: update_file/handler.update_file
     package:
@@ -107,8 +111,8 @@ functions:
     handler: create_album/handler.create_album
     package:
       include: "create_album/**"
-    events:
-      - http:
-          path: /api/create_album
-          method: post
-          cors: true
+      events:
+        - http:
+            path: /api/create_album
+            method: post
+            cors: true
