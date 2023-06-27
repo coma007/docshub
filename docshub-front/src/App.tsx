@@ -8,19 +8,6 @@ import { Auth } from 'aws-amplify';
 
 function App() {
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        localStorage.setItem('user', JSON.stringify(user));
-      } catch (error) {
-        console.log('Error:', error);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
   return (
     <div className="App">
       <Navigation />

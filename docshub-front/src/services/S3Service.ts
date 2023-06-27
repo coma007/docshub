@@ -4,7 +4,7 @@ import { getCurrentSession, getCurrentSessionSub } from '../utils/session';
 const S3Service = {
 
     getAllFiles: async function (album?: string) {
-        let sub = getCurrentSessionSub()
+        let sub = await getCurrentSessionSub()
         if (album === undefined) {
             album = "macke"
         }

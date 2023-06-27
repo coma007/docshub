@@ -8,7 +8,7 @@ import FileListPageCSS from "./FileListPage.module.css"
 import FileDownloadService from "../services/FileDownloadService";
 import FileDetailsComponent from "../components/FileDetailsComponent";
 import FileDeleteService from "../services/FileDeleteService";
-import { getCurrentSessionSub } from "../../../utils/session";
+import { getCurrentSession, getCurrentSessionSub } from "../../../utils/session";
 
 function FileListPage() {
 
