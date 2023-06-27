@@ -2,6 +2,7 @@ import { Tag } from "./Tag";
 
 export interface FileMetadata {
     albumId: string,
+    fileId: string,
     fileName: string,
     fileType?: string,
     fileSize: number,
