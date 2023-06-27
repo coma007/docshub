@@ -125,3 +125,7 @@ functions:
             path: /api/delete-file
             method: delete
             cors: true
+  update_file:
+    handler: update_file/handler.update_file
+    package:
+      include: "update_file/**"

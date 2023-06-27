@@ -13,7 +13,6 @@ def download_file(event, context):
         file_key = event['fileKey']
         response = s3.get_object(Bucket=s3_bucket_name, Key="public/" + file_key)
 
-        
         file_data = base64.b64encode(response.get("Body").read()).decode("utf-8")
 
         return {
