@@ -80,6 +80,7 @@ function FileListPage() {
 
     const closeAlbumCreateModal = () => {
         setOpenAlbumCreateModal(false);
+        fetchImages()
     };
 
 
@@ -125,14 +126,17 @@ function FileListPage() {
     }
 
     const deleteFile = (fileKey: string) => {
-        console.log(fileKey)
         FileDeleteService.delete_image(fileKey);
     }
 
     return (
         <div>
             <FileUploadModal isOpenModal={isOpenModal} closeModal={closeModal} fetchImages={fetchImages}></FileUploadModal>
-            <AlbumCreateModal isOpenModal={isOpenAlbumCreateModal} closeModal={closeAlbumCreateModal} fetchImages={fetchImages}></AlbumCreateModal>
+            <AlbumCreateModal
+                isOpenModal={isOpenAlbumCreateModal}
+                closeModal={closeAlbumCreateModal}
+                fetchImages={fetchImages}
+                currentAlbumId={albumStack?.at(-1)?.albumId}></AlbumCreateModal>
             <div className={FileListPageCSS.content}>
                 <div className={FileListPageCSS.list}>
                     <div className={FileListPageCSS.navigation}>

@@ -10,10 +10,10 @@ import { TagsInput } from "react-tag-input-component";
 import { AlbumMetadata } from '../../../types/AlbumMetadata'
 import AlbumCreateService from '../services/AlbumCreateService'
 
-const AlbumCreateModal = (props: { isOpenModal: boolean, closeModal: any, fetchImages: any }) => {
+const AlbumCreateModal = (props: { isOpenModal: boolean, closeModal: any, fetchImages: any, currentAlbumId: string | undefined }) => {
 
     const [albumName, setAlbumName] = useState<string>("");
-    
+
     const handleNameChange = (event: any) => {
         setAlbumName(event.target.value);
     };
@@ -26,7 +26,7 @@ const AlbumCreateModal = (props: { isOpenModal: boolean, closeModal: any, fetchI
 
         const data: AlbumMetadata = {
             albumId: albumName,
-            parentAlbumId: "ALBUM",
+            parentAlbumId: props.currentAlbumId!,
             albumName: albumName,
         };
 

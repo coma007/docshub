@@ -7,7 +7,6 @@ const S3Service = {
         if (album === undefined) {
             album = ""
         }
-        console.log(album)
         const { results } = await Storage.list(album, { level: "public" });
         return this.filterResults(album, results);
     },
