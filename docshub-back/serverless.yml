@@ -120,12 +120,21 @@ functions:
     handler: delete_file/handler.delete_file
     package:
       include: "delete_file/**"
-      events:
-        - http:
-            path: /api/delete-file
-            method: delete
-            cors: true
+    events:
+      - http:
+          path: /api/delete-file
+          method: delete
+          cors: true
   update_file:
     handler: update_file/handler.update_file
     package:
       include: "update_file/**"
+  create_album:
+    handler: create_album/handler.create_album
+    package:
+      include: "create_album/**"
+    events:
+      - http:
+          path: /api/create_album
+          method: post
+          cors: true

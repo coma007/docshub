@@ -7,3 +7,5 @@ dynamodb = boto3.resource('dynamodb',
                           region_name=aws_config.AWS_REGION)
 table_name = 'file_metadata'
 table = dynamodb.Table(table_name)
+album_table_name = 'album_metadata'
+album_table = dynamodb.Table(album_table_name)
