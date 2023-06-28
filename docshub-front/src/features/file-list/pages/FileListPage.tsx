@@ -134,7 +134,11 @@ function FileListPage(props: { option: string }) {
     }
 
     const deleteFile = (fileKey: string) => {
-        FileDeleteService.delete_image(fileKey);
+        if (fileKey.endsWith("/")) {
+            FileDeleteService.delete_album(fileKey);
+        } else {
+            FileDeleteService.delete_image(fileKey);
+        }
     }
 
     return (

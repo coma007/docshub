@@ -1,3 +1,5 @@
+import json
+
 from utils.s3_config import s3, s3_bucket_name
 from utils.dynamodb_config import table, album_table, table_name, album_table_name
 
@@ -5,8 +7,9 @@ from utils.response import create_response
 
 
 def delete_album(event, context):
+    print(event['body'])
     try:
-        album_path = event['albumPath']
+        album_path = json.loads(event['body'])['albumPath']
         album_tokens = album_path.split("/")
         album_name = album_tokens[-1]
         album_path = ""
@@ -45,7 +48,7 @@ def delete_album_recursive(album_path, album_name):
     files = table.query(
         KeyConditionExpression="album_id = :id",
         ExpressionAttributeValues={
-            ":id": album_path + album_name + "/",
+            ":id": album_path + album_name,
         },
     )
     
