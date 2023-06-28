@@ -20,6 +20,7 @@ def on_change(event, context):
                 file_changed = tokens[-1]
                 sub = tokens[1]
                 receiver_email = find_user(sub)
+                print(receiver_email)
                 send_email("docshub.noreply@gmail.com", receiver_email, get_subject(event_name),
                            "Operation executed on " + file_changed)
 
@@ -88,7 +89,6 @@ def send_email(sender, recipient, subject, body):
     # Try to send the email.
     try:
         # Provide the contents of the email.
-        print("AAAAAAAAAAAA")
         response = client.send_email(
             Destination={
                 'ToAddresses': [
@@ -114,7 +114,7 @@ def send_email(sender, recipient, subject, body):
         )
     # Display an error if something goes wrong.
     except Exception as e:
-        print(e.response['Error']['Message'])
+        print(e)
     else:
         print("Email sent! Message ID:"),
         print(response['MessageId'])
