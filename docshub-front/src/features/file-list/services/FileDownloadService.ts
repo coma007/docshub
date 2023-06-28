@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { DOWNLOAD_FILE_URL } from '../../../api';
 import { Buffer } from 'buffer';
+import { getToken } from '../../../utils/session';
 
 const FileDownloadService = {
 
     download_file: async function (fileKey: string): Promise<boolean> {
-        return axios.post(DOWNLOAD_FILE_URL(), { fileKey: fileKey })
+        const token = await getToken()
+        console.log(token)
+        return axios.post(DOWNLOAD_FILE_URL(), {headers: {"Authorization": "Bearer " + token}, fileKey: fileKey })
             .then(response => {
                 const data = response.data.body
                 const contentType = response.data["headers"]["Content-Type"]

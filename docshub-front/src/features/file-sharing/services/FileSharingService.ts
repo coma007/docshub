@@ -3,11 +3,14 @@ import { Buffer } from 'buffer';
 import { ADD_USER_ACCESS, GET_USERS_WITH_ACCESS, GET_USER_ACCESS, REMOVE_USER_ACCESS } from '../../../api';
 import { FileMetadata } from '../../../types/FileMetadata';
 import { Permission } from '../types/Permission';
+import { getToken } from '../../../utils/session';
 
 const FileSharingService = {
 
     get_users_with_access: async function (fileKey: string): Promise<Permission[]> {
-        return axios.get(GET_USERS_WITH_ACCESS(), { params: { fileName: fileKey } })
+        const token = await getToken()
+        console.log(token)
+        return axios.get(GET_USERS_WITH_ACCESS(), {headers: {"Authorization": "Bearer " + token}, params: { fileName: fileKey } })
             .then(response => {
                 return response.data
             })
@@ -29,7 +32,9 @@ const FileSharingService = {
     },
 
     remove_permission: async function (permission: Permission): Promise<string[]> {
-        return axios.delete(REMOVE_USER_ACCESS(), { data: { permission: permission } })
+        const token = await getToken()
+        console.log(token)
+        return axios.delete(REMOVE_USER_ACCESS(), {headers: {"Authorization": "Bearer " + token}, data: { permission: permission } })
             .then(response => {
                 return response.data
             })
