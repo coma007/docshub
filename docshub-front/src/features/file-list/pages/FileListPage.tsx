@@ -8,13 +8,12 @@ import FileListPageCSS from "./FileListPage.module.css"
 import FileDownloadService from "../services/FileDownloadService";
 import FileDetailsComponent from "../components/FileDetailsComponent";
 import FileDeleteService from "../services/FileDeleteService";
-import { getCurrentSession, getCurrentSessionSub } from "../../../utils/session";
-// import { getCurrentSessionSub } from "../../../utils/session";
 import AlbumCreateModal from "../../album-create/components/AlbumCreateModal";
+import { AlbumMetadata } from "../../../types/AlbumMetadata"
+import { getCurrentSessionSub } from "../../../utils/session";
+import FileSharingModal from "../../file-sharing/components/FileSharingModal";
 
-function FileListPage() {
-
-    // getCurrentSessionSub();
+function FileListPage(props: { option: string }) {
 
     const [imageKeys, setImageKeys] = useState<S3ProviderListOutputItem[]>([]);
     const [images, setImages] = useState<string[]>([]);
@@ -22,12 +21,31 @@ function FileListPage() {
     const [selectedFile, setSelectedFile] = useState<string | undefined>(undefined);
     const [selectedImageSrc, setSelectedImageSrc] = useState<string | undefined>(undefined);
 
+    const [albumStack, setAlbumStack] = useState<AlbumMetadata[]>();
+
     useEffect(() => {
-        fetchImages();
+        const setAlbum = async () => {
+            if (albumStack === undefined) {
+                let currentSub = await getCurrentSessionSub();
+                let album: AlbumMetadata = {
+                    albumId: currentSub + "/",
+                    albumName: "root",
+                    parentAlbumId: undefined
+                }
+                setAlbumStack([album]);
+            }
+        };
+        setAlbum();
     }, [])
 
+    useEffect(() => {
+        if (albumStack !== undefined) {
+            fetchImages();
+        }
+    }, [albumStack])
+
     const fetchImages = async () => {
-        const results = await S3Service.getAllFiles();
+        const results = await S3Service.getAllFiles(albumStack?.at(-1)?.albumId);
         setImageKeys(results);
         let s3Images = await Promise.all(
             results.map(
@@ -46,26 +64,54 @@ function FileListPage() {
 
     }
 
-    const [isOpenModal, setOpenModal] = useState(false);
+    const [isOpenFileUploadModal, setOpenFileUploadModal] = useState(false);
     const [isOpenAlbumCreateModal, setOpenAlbumCreateModal] = useState(false);
+    const [isOpenFileShareModal, setOpenFileShareModal] = useState(false);
 
     const handleAddFile = () => {
-        setOpenModal(true);
+        setOpenFileUploadModal(true);
+    };
+
+    const closeFileUploadModal = () => {
+        setOpenFileUploadModal(false);
     };
 
     const handleAlbumCreate = () => {
         setOpenAlbumCreateModal(true);
     };
 
-    const closeModal = () => {
-        setOpenModal(false);
-    };
-
     const closeAlbumCreateModal = () => {
         setOpenAlbumCreateModal(false);
+        fetchImages()
     };
 
-    async function getFileType(type: string): Promise<string> {
+    const handleFileShareModal = () => {
+        setOpenFileShareModal(true);
+    };
+
+    const closeFileShareModal = () => {
+        setOpenFileShareModal(false);
+    };
+
+
+    function handleItemClick(index: number, item: string) {
+        if (fileTypes[index] === "directory") {
+            let album: AlbumMetadata = {
+                albumId: imageKeys[index + 1].key!,
+                albumName: getFileName(getFileName(imageKeys[index + 1]?.key!)),
+                parentAlbumId: albumStack?.at(-1)?.albumId
+            }
+            setAlbumStack([...albumStack!, album])
+        }
+        setSelectedFile(imageKeys[index + 1].key);
+        setSelectedImageSrc(item);
+    }
+
+    function exitAlbum() {
+        setAlbumStack(albumStack?.slice(0, -1))
+    }
+
+    function getFileType(type: string): string {
         if (type.split("/")[1].includes("directory")) {
             return "directory"
         }
@@ -73,6 +119,9 @@ function FileListPage() {
     }
 
     const getFileName = (filePath: string): string => {
+        if (filePath === undefined) {
+            return ""
+        }
         let segments = filePath.split("/")
         if (segments.at(-1) == "") {
             segments.pop()
@@ -85,20 +134,46 @@ function FileListPage() {
     }
 
     const deleteFile = (fileKey: string) => {
-        console.log(fileKey)
         FileDeleteService.delete_image(fileKey);
     }
 
     return (
         <div>
-            <FileUploadModal isOpenModal={isOpenModal} closeModal={closeModal} fetchImages={fetchImages}></FileUploadModal>
-            <AlbumCreateModal isOpenModal={isOpenAlbumCreateModal} closeModal={closeAlbumCreateModal} fetchImages={fetchImages}></AlbumCreateModal>
+            {props.option == "owned" &&
+                <>
+                    <FileUploadModal
+                        isOpenModal={isOpenFileUploadModal}
+                        closeModal={closeFileUploadModal}
+                        fetchImages={fetchImages}></FileUploadModal>
+                    <AlbumCreateModal
+                        isOpenModal={isOpenAlbumCreateModal}
+                        closeModal={closeAlbumCreateModal}
+                        currentAlbumId={albumStack?.at(-1)?.albumId}></AlbumCreateModal>
+                    <FileSharingModal
+                        isOpenModal={isOpenFileShareModal}
+                        closeModal={closeFileShareModal}
+                        selectedFile={selectedFile}></FileSharingModal>
+                </>
+            }
             <div className={FileListPageCSS.content}>
                 <div className={FileListPageCSS.list}>
                     <div className={FileListPageCSS.navigation}>
-                        <Heading className={FileListPageCSS.title} level={5}>Album explorer</Heading>
-                        <Button className={FileListPageCSS.accent} onClick={handleAddFile}>New file</Button>
-                        <Button className={FileListPageCSS.space} onClick={handleAlbumCreate}>New album</Button>
+                        <Heading className={FileListPageCSS.title} level={5}>
+                            Album explorer
+                            <span className={FileListPageCSS.currentAlbum}>
+                                {" ~ " + albumStack?.at(-1)?.albumName}
+                            </span>
+                            {albumStack?.at(-1)?.parentAlbumId != null &&
+                                <button className={FileListPageCSS.buttonicon} onClick={() => exitAlbum()}>
+                                    <Image className={FileListPageCSS.image} alt="bck" src="/actions/back.png" />
+                                </button>
+                            }
+                        </Heading>
+                        {props.option == "owned" && <>
+                            <Button className={FileListPageCSS.accent} onClick={handleAddFile}>New file</Button>
+                            <Button className={FileListPageCSS.space} onClick={handleAlbumCreate}>New album</Button>
+                        </>
+                        }
                     </div>
                     <Card key="header"
                         className={FileListPageCSS.header}>
@@ -113,8 +188,7 @@ function FileListPage() {
                     >
                         {(item, index) => (
                             <Card key={index} onClick={() => {
-                                setSelectedFile(imageKeys[index + 1].key);
-                                setSelectedImageSrc(item)
+                                handleItemClick(index, item);
                             }}
                                 className={FileListPageCSS.item}>
                                 <span className={FileListPageCSS.image}>
@@ -137,7 +211,9 @@ function FileListPage() {
                                         <Image src="/types/directory.png" className={FileListPageCSS.image} alt="dir" />
                                     }
                                 </span>
+
                                 <Text>{getFileName(imageKeys[index + 1]?.key!)}</Text>
+                                {props.option != "owned" && <><div></div><div></div></>}
                                 {fileTypes[index] != "directory" ?
                                     <button className={FileListPageCSS.buttonicon} onClick={() => downloadFile(imageKeys[index + 1]?.key!)}>
                                         <Image className={FileListPageCSS.image} alt="get" src="/actions/download.png" />
@@ -145,9 +221,15 @@ function FileListPage() {
                                     :
                                     <div></div>
                                 }
-                                <button className={FileListPageCSS.buttonicon} onClick={() => deleteFile(imageKeys[index + 1]?.key!)}>
-                                    <Image className={FileListPageCSS.image} alt="del" src="/actions/delete.png" />
-                                </button>
+                                {props.option == "owned" && <>
+                                    <button className={FileListPageCSS.buttonicon} onClick={handleFileShareModal}>
+                                        <Image className={FileListPageCSS.image} alt="shr" src="/actions/share.png" />
+                                    </button>
+                                    <button className={FileListPageCSS.buttonicon} onClick={() => deleteFile(imageKeys[index + 1]?.key!)}>
+                                        <Image className={FileListPageCSS.image} alt="del" src="/actions/delete.png" />
+                                    </button>
+                                </>
+                                }
                             </Card>
                         )}
                     </Collection>

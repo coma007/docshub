@@ -10,7 +10,8 @@
   "requiredAttributes": [
     "name",
     "email",
-    "birthdate"
+    "birthdate",
+    "custom:referal_email"
   ],
   "passwordPolicyMinLength": 8,
   "passwordPolicyCharacters": [

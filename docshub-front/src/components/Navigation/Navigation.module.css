@@ -12,6 +12,24 @@
     align-items: center;
 }
 
+.bar .left {
+    display: flex;
+    padding: 2px
+}
+
+.bar .left Button {
+    border: none;
+}
+
+.margin {
+    margin-left: 50px;
+    margin-right: 20px;
+}
+
 .logo {
     height: 50px;
+}
+
+.active {
+    color: #047d95;
 }

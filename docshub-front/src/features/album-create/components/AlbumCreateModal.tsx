@@ -1,19 +1,14 @@
-import { S3ProviderListOutputItem } from '@aws-amplify/storage'
 import { Button, FileUploader, TextAreaField, TextField } from '@aws-amplify/ui-react'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import Modal from "react-modal"
-import S3Service from '../../../services/S3Service'
-import { FileMetadata, FileMetadataWithFile } from '../../../types/FileMetadata'
-import FileUploadService from '../services/AlbumCreateService'
 import AlbumCreateModalCSS from "./AlbumCreateModal.module.css"
-import { TagsInput } from "react-tag-input-component";
 import { AlbumMetadata } from '../../../types/AlbumMetadata'
 import AlbumCreateService from '../services/AlbumCreateService'
 
-const AlbumCreateModal = (props: { isOpenModal: boolean, closeModal: any, fetchImages: any }) => {
+const AlbumCreateModal = (props: { isOpenModal: boolean, closeModal: any, currentAlbumId: string | undefined }) => {
 
     const [albumName, setAlbumName] = useState<string>("");
-    
+
     const handleNameChange = (event: any) => {
         setAlbumName(event.target.value);
     };
@@ -26,7 +21,7 @@ const AlbumCreateModal = (props: { isOpenModal: boolean, closeModal: any, fetchI
 
         const data: AlbumMetadata = {
             albumId: albumName,
-            parentAlbumId: "ALBUM",
+            parentAlbumId: props.currentAlbumId!,
             albumName: albumName,
         };
 
@@ -45,8 +40,8 @@ const AlbumCreateModal = (props: { isOpenModal: boolean, closeModal: any, fetchI
     return (
         <Modal style={{
             content: {
-                width: '70%',
-                height: `83%`,
+                width: '43%',
+                height: `42%`,
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',

@@ -13,8 +13,10 @@ def create_album(event, context):
         parent_album_id = body['parentAlbumId']
         album_id = body['albumId']
         album_name = body['albumName']
-        s3.put_object(Bucket=s3_bucket_name, Key=("public/" + parent_album_id + "/" + album_id + "/"))
-    
+
+        s3.put_object(Bucket=s3_bucket_name, Key=(
+            "public/" + parent_album_id + album_id + "/"), ContentType="application/x-directory")
+
         album_table.put_item(Item={
             'album_id': album_id,
             'parent_album_id': parent_album_id,

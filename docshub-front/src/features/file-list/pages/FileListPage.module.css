@@ -16,6 +16,8 @@
 .title {
     text-align: left;
     margin-right: auto;
+    display: flex;
+    justify-content: center;
 }
 
 .content {
@@ -37,7 +39,7 @@
     height: 45px;
     border-radius: 5px;
     display: grid;
-    grid-template-columns: 1fr 15fr 1fr 1fr;
+    grid-template-columns: 1fr 15fr 1fr 1fr 1fr;
     align-items: center;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.10) 0px 1px 4px;
@@ -81,4 +83,14 @@
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.20) 0px 1px 4px;
     border-radius: 5px;
+}
+
+.currentAlbum {
+    margin-left: 10px;
+    color: #047d95;
+}
+
+.title .buttonicon {
+    width: 30px;
+    margin-left: 10px;
 }

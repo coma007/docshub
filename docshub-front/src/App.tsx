@@ -1,19 +1,34 @@
 import './App.css';
-import { withAuthenticator, useAuthenticator, Button } from "@aws-amplify/ui-react"
+import { withAuthenticator, useAuthenticator, Button, Authenticator } from "@aws-amplify/ui-react"
 import "@aws-amplify/ui-react/styles.css"
 import FileListPage from './features/file-list/pages/FileListPage';
 import Navigation from './components/Navigation/Navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
 
 function App() {
 
+  const [option, setOption] = useState<string>("owned")
+
+  const signUpFields = {
+    signUp: {
+      'custom:referal_email': {
+        placeHolder: "Enter Referal Email",
+        isRequired: false,
+        label: 'Referal Email',
+        order: 10
+      },
+    }
+  }
+
   return (
-    <div className="App">
-      <Navigation />
-      <FileListPage />
-    </div >
+    <Authenticator formFields={signUpFields} >
+      <div className="App">
+        <Navigation option={option} changeOption={setOption} />
+        <FileListPage option={option} />
+      </div >
+    </Authenticator>
   );
 }
 
-export default withAuthenticator(App);
+export default App;

@@ -4,12 +4,11 @@ import { getCurrentSession, getCurrentSessionSub } from '../utils/session';
 const S3Service = {
 
     getAllFiles: async function (album?: string) {
-        let sub = await getCurrentSessionSub()
         if (album === undefined) {
             album = ""
         }
-        const { results } = await Storage.list(sub + "/" + album, { level: "public" });
-        return this.filterResults(sub + "/" + album, results);
+        const { results } = await Storage.list(album, { level: "public" });
+        return this.filterResults(album, results);
     },
 
     filterResults: function (rootPath: string, paths: any[]): any[] {
@@ -27,7 +26,7 @@ const S3Service = {
             })
         return filterResults
     },
-    
+
     isDirectFolder: function (pathSegments: string[], length: number) {
         return pathSegments.length == length + 1
     },
