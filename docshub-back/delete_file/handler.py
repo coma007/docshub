@@ -7,16 +7,32 @@ from utils.response import create_response
 def delete_file(event, context):
     try:
         file_key = event['fileKey']
-        response = s3.delete_object(Bucket=s3_bucket_name, Key="public/" + file_key)
-
-        print("nesto")
-        response = table.delete_item(
-            TableName=table_name,
-            Key={
-                'album_id': 'ALBUM',
-                'file_id': file_key
-            }
+        file_tokens = file_key.split("/")
+        file_key = file_tokens[-1]
+        album_id = ""
+        for key in file_tokens:
+            if key == file_key:
+                break
+            album_id += key + "/"
+        response = s3.delete_object(Bucket=s3_bucket_name, Key="public/" + album_id + file_key)
+        
+        files = table.query(
+            KeyConditionExpression="album_id = :id",
+            ExpressionAttributeValues={
+                ":id": album_id,
+            },
         )
+        
+        for item in files["Items"]:
+            if item["file_name"] == file_key:
+                response = table.delete_item(
+                    TableName=table_name,
+                    Key={
+                        'album_id': album_id,
+                        'file_id': item["file_id"]
+                    }
+                )
+                break
 
         return create_response(204, None)
     except Exception as e:
