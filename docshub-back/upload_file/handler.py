@@ -13,7 +13,7 @@ def upload_file(event, context):
 
     try:
         body = event['body']
-        file_id = id_db.hex
+        file_id = body['fileName']
         file_name = body['fileName']
         album_id = body['albumId']
         file_size = body['fileSize']
