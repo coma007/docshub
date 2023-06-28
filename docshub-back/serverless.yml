@@ -94,6 +94,10 @@ functions:
       #       path: /api/download-file
       #       method: get
       #       cors: true
+  get_file_s3:
+    handler: get_file_s3/handler.get_file_s3
+    package:
+      include: "get_file_s3/**"
   delete_file:
     handler: delete_file/handler.delete_file
     package:

@@ -8,16 +8,35 @@ from utils.response import create_response
 
 
 def get_file_metadata(event, context):
-    fileKey = event['pathParameters']['key']
+    print(event)
+    attribute_name = "file_name"
+    fullName = event['queryStringParameters']['fileName']
+    fileTokens = fullName.split("/")
+    fileKey = fileTokens[-1]
+    albumId = ""
+    for key in fileTokens:
+        if key == fileKey:
+            break
+        albumId += key + "/"
     try:
-        response = table.get_item(
-            TableName=table_name,
-            Key={
-                'album_id': 'ALBUM',
-                'file_id': fileKey
-            }
+        response = table.query(
+            KeyConditionExpression="album_id = :id",
+            ExpressionAttributeValues={
+                ":id": albumId,
+            },
         )
-        return create_response(200, response['Item'])
 
+        for item in response["Items"]:
+            if item['file_name'] == fileKey:
+                return create_response(200, item)
+        # response = table.get_item(
+        #     TableName=table_name,
+        #     Key={
+        #         'album_id': 'ALBUM',
+        #         'file_id': fileKey
+        #     }
+        # )
+        return create_response(200, response)
+        # return create_response(200, event)
     except Exception as e:
         return create_response(500, e)
