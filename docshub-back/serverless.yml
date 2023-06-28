@@ -132,3 +132,12 @@ functions:
             path: /api/delete_album
             method: delete
             cors: true
+  get_users_with_access:
+    handler: get_users_with_access/handler.get_users_with_access
+    package:
+      include: "get_users_with_access/**"
+      events:
+        - http:
+            path: /api/get-users-with-access
+            method: get
+            cors: true
