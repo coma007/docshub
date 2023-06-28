@@ -149,6 +149,15 @@ functions:
             path: /api/get-users-with-access
             method: get
             cors: true
+  add_user_access:
+    handler: add_user_access/handler.add_user_access
+    package:
+      include: "add_user_access/**"
+      events:
+        - http:
+            path: /api/add-user-access
+            method: post
+            cors: true
   remove_user_access:
     handler: remove_user_access/handler.remove_user_access
     package:
@@ -158,3 +167,29 @@ functions:
             path: /api/remove-user-access
             method: delete
             cors: true
+  get_user_access:
+    handler: get_user_access/handler.get_user_access
+    package:
+      include: "get_user_access/**"
+      events:
+        - http:
+            path: /api/get-user-access
+            method: get
+            cors: true
+  wait_for_token:
+    handler: wait_for_token/handler.handle
+    package:
+      include: "wait_for_token/**"
+  generate_register_mail:
+    handler: generate_register_mail/handler.handle
+    package:
+      include: "generate_register_mail/**"
+  respond_to_mail:
+    handler: respond_to_mail/handler.handle
+    package:
+      include: "respond_to_mail/**"
+  success_mail:
+    handler: success_mail/handler.handle
+    package:
+      include: "success_mail/**"
+
