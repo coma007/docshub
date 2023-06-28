@@ -192,4 +192,18 @@ functions:
     handler: success_mail/handler.handle
     package:
       include: "success_mail/**"
+  proceed_referal:
+    handler: proceed_referal/handler.proceed_referal
+    package:
+      include: "proceed_referal/**"
+  referal_callback:
+      handler: referal_callback/handler.referal_callback
+      package:
+        include: "referal_callback/**"
+        events:
+        - http:
+            path: /api/proceed-referal
+            method: get
+            cors: true
 
+            
