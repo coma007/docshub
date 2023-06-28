@@ -1,12 +1,27 @@
 import { Button, Collection, ScrollView, Text, TextField } from '@aws-amplify/ui-react'
 import Modal from "react-modal"
 import FileSharingModalCSS from "./FileSharingModal.module.css"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TagsInput } from 'react-tag-input-component'
+import FileSharingService from '../services/FileSharingService'
 
 const FileSharingModal = (props: { isOpenModal: boolean, closeModal: any, selectedFile: any }) => {
 
-    console.log(props.selectedFile)
+
+    useEffect(() => {
+        if (props.selectedFile !== undefined)
+            fetchUsers()
+    }, [props.selectedFile])
+
+
+    const fetchUsers = () => {
+        FileSharingService.get_users_with_access(props.selectedFile)
+            .then(result => {
+                console.log(result)
+            }
+            )
+    }
+
     const [usernames, setUsernames] = useState<string[]>([]);
 
     const handleTagsChange = (emails: any) => {

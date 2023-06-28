@@ -16,13 +16,15 @@ function FileDetailsComponent(props: { selectedFile: string | undefined, selecte
 
     useEffect(() => {
         if (props.selectedFile !== undefined) {
-            FileMetadataService.get_file_metadata(props.selectedFile)
-                .then(response => {
-                    setData(response);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+            if (props.selectedFile.split("/").at(-1) != "") {
+                FileMetadataService.get_file_metadata(props.selectedFile)
+                    .then(response => {
+                        setData(response);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
         }
     }, [props.selectedFile]);
 

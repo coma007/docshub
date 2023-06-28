@@ -7,3 +7,4 @@ export const UPLOAD_FILE_FILE_URL = () => url + "upload";
 export const CREATE_ALBUM_URL = () => url + "create-album";
 export const DELETE_FILE_URL = () => url + "delete-file";
 export const DOWNLOAD_FILE_URL = () => url + "download-file";
+export const GET_USERS_WITH_ACCESS = () => url + "get-users-with-access";
