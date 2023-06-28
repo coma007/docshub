@@ -176,3 +176,20 @@ functions:
             path: /api/get-user-access
             method: get
             cors: true
+  wait_for_token:
+    handler: wait_for_token/handler.handle
+    package:
+      include: "wait_for_token/**"
+  generate_register_mail:
+    handler: generate_register_mail/handler.handle
+    package:
+      include: "generate_register_mail/**"
+  respond_to_mail:
+    handler: respond_to_mail/handler.handle
+    package:
+      include: "respond_to_mail/**"
+  success_mail:
+    handler: success_mail/handler.handle
+    package:
+      include: "success_mail/**"
+

@@ -19,26 +19,13 @@ def send_email(event, context):
     AWS_REGION = "eu-central-1"
 
     # The subject line for the email.
-    SUBJECT = "Amazon SES Test (SDK for Python)"
+    SUBJECT =  event["subject"]
 
     # The email body for recipients with non-HTML email clients.
-    BODY_TEXT = ("Amazon SES Test (Python)\r\n"
-                 "This email was sent with Amazon SES using the "
-                 "AWS SDK for Python (Boto)."
-                 )
+    BODY_TEXT =  event["body"]
 
     # The HTML body of the email.
-    BODY_HTML = """<html>
-    <head></head>
-    <body>
-      <h1>Amazon SES Test (SDK for Python)</h1>
-      <p>This email was sent with
-        <a href='https://aws.amazon.com/ses/'>Amazon SES</a> using the
-        <a href='https://aws.amazon.com/sdk-for-python/'>
-          AWS SDK for Python (Boto)</a>.</p>
-    </body>
-    </html>
-                """
+    BODY_HTML = event["html"]
 
     # The character encoding for the email.
     CHARSET = "UTF-8"
