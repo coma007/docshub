@@ -12,6 +12,9 @@ import AlbumCreateModal from "../../album-create/components/AlbumCreateModal";
 import { AlbumMetadata } from "../../../types/AlbumMetadata"
 import { getCurrentSessionSub } from "../../../utils/session";
 import FileSharingModal from "../../file-sharing/components/FileSharingModal/FileSharingModal";
+import FileMetadataService from "../services/FileMetadataService";
+import FileUpdateService from "../../file-update/services/FileUpdateService";
+import FileUpdateModal from "../../file-update/components/FileUpdateModal";
 
 function FileListPage(props: { option: string }) {
 
@@ -67,6 +70,7 @@ function FileListPage(props: { option: string }) {
     const [isOpenFileUploadModal, setOpenFileUploadModal] = useState(false);
     const [isOpenAlbumCreateModal, setOpenAlbumCreateModal] = useState(false);
     const [isOpenFileShareModal, setOpenFileShareModal] = useState(false);
+    const [isOpenFileUpdateModal, setOpenFileUpdateModal] = useState(false);
 
     const handleAddFile = () => {
         setOpenFileUploadModal(true);
@@ -92,6 +96,15 @@ function FileListPage(props: { option: string }) {
     const closeFileShareModal = () => {
         setOpenFileShareModal(false);
     };
+
+    const closeFileUpdateModal = () => {
+        setOpenFileUpdateModal(false);
+    };
+
+    const handleFileUpdateModal = () => {
+        setOpenFileUpdateModal(true);
+    };
+
 
 
     function handleItemClick(index: number, item: string) {
@@ -141,6 +154,7 @@ function FileListPage(props: { option: string }) {
         }
     }
 
+
     return (
         <div>
             {props.option == "owned" &&
@@ -150,6 +164,10 @@ function FileListPage(props: { option: string }) {
                         isOpenModal={isOpenFileUploadModal}
                         closeModal={closeFileUploadModal}
                         fetchImages={fetchImages}></FileUploadModal>
+                    <FileUpdateModal
+                        isOpenModal={isOpenFileUpdateModal}
+                        closeModal={closeFileUpdateModal}
+                        selectedFile={selectedFile!}></FileUpdateModal>
                     <AlbumCreateModal
                         isOpenModal={isOpenAlbumCreateModal}
                         closeModal={closeAlbumCreateModal}
@@ -222,6 +240,13 @@ function FileListPage(props: { option: string }) {
                                 {fileTypes[index] != "directory" ?
                                     <button className={FileListPageCSS.buttonicon} onClick={() => downloadFile(imageKeys[index + 1]?.key!)}>
                                         <Image className={FileListPageCSS.image} alt="get" src="/actions/download.png" />
+                                    </button>
+                                    :
+                                    <div></div>
+                                }
+                                {fileTypes[index] != "directory" ?
+                                    <button className={FileListPageCSS.buttonicon} onClick={ handleFileUpdateModal}>
+                                        <Image className={FileListPageCSS.image} alt="update" src="/actions/download.png" />
                                     </button>
                                     :
                                     <div></div>

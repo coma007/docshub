@@ -24,15 +24,15 @@ def update_file(event, context):
         UpdateExpression="set "
                          "#description = :description_val, "
                          "#tags = :tags_val ",
+        ConditionExpression="#file_id = :file_id_val AND #album_id = :album_id_val ",
         ExpressionAttributeNames={
-            "#file_name": "file_name",
-            "#album_id": "name",
+            "#file_id": "file_id",
+            "#album_id": "album_id",
             "#description": "description",
             "#tags": "tags",
         },
-        ConditionExpression="file_id = :file_id_val AND album_id = :album_id_val ",
+
         ExpressionAttributeValues={
-            ":file_name_val": file_name,
             ":file_id_val": file_id,
             ":album_id_val": album_id,
             ":description_val": description,
