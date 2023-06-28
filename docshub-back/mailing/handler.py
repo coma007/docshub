@@ -1,7 +1,7 @@
 import boto3
 from botocore.exceptions import ClientError
 
-def send_mail(event, context):
+def send_email(event, context):
     # Replace sender@example.com with your "From" address.
     # This address must be verified with Amazon SES.
     SENDER = event["sender"]
