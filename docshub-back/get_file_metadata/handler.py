@@ -29,6 +29,5 @@ def get_file_metadata(event, context):
             if item['file_name'] == fileKey:
                 return create_response(200, item)
         return create_response(404, None)
-        # return create_response(200, event)
     except Exception as e:
         return create_response(500, e)

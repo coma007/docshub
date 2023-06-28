@@ -84,6 +84,10 @@ functions:
     #       path: /api/download-file
     #       method: get
     #       cors: true
+  upload_validation:
+    handler: upload_validation/handler.validate
+    package:
+      include: "upload_validation/**"
   upload_success_handling:
     handler: upload_success_handling/handler.handle_success
     package:
@@ -93,6 +97,10 @@ functions:
       #       path: /api/download-file
       #       method: get
       #       cors: true
+  get_file_s3:
+    handler: get_file_s3/handler.get_file_s3
+    package:
+      include: "get_file_s3/**"
   delete_file:
     handler: delete_file/handler.delete_file
     package:

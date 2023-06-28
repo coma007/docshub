@@ -23,12 +23,12 @@ def update_file(event, context):
         Key={"file_id": file_id, "album_id": album_id},
         UpdateExpression="set "
                          "#file_name = :file_name_val, "
-                         # "#album_id = :album_id_val, "
+                         "#album_id = :album_id_val, "
                          "#description = :description_val, "
                          "#tags = :tags_val ",
         ExpressionAttributeNames={
             "#file_name": "file_name",
-            # "#album_id": "name",
+            "#album_id": "name",
             "#description": "description",
             "#tags": "tags",
         },
