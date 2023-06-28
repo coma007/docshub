@@ -27,9 +27,28 @@
 }
 
 .permissions {
-    margin-top: 80px;
+    margin-top: 90px;
+    border-radius: 10px;
+    background-color: #047d9517;
+    padding: 20px
+}
+
+.permissions p {
+    margin-bottom: 10px;
+}
+
+.title {
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.permissions .description {
+    font-size: smaller;
+    color: gray;
+    font-style: italic;
 }
 
 .scroll {
-    max-height: 150px;
+    max-height: 180px;
+    height: 180px;
 }
