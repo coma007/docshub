@@ -1,6 +1,6 @@
 import json
 from utils.s3_config import s3, s3_bucket_name
-from utils.dynamodb_config import table, table_name
+from utils.dynamodb_config import table, table_name, dynamodb
 
 from utils.response import create_response
 
@@ -8,6 +8,7 @@ from utils.response import create_response
 def delete_file(event, context):
     try:
         file_key = json.loads(event['body'])['fileKey']
+        remove_permission(file_key)
         file_tokens = file_key.split("/")
         file_key = file_tokens[-1]
         album_id = ""
@@ -36,5 +37,31 @@ def delete_file(event, context):
                 break
 
         return create_response(204, None)
+    except Exception as e:
+        return create_response(500, e)
+        
+        
+def remove_permission(file_path):
+    print(file_path)
+    permissions_table_name = 'permissions'
+    permissions_table = dynamodb.Table(permissions_table_name)
+    
+    try:
+        params = {
+            'TableName': permissions_table_name,
+            'IndexName': 'file_name-index',
+            'KeyConditionExpression': 'file_name = :item_path',
+            'ExpressionAttributeValues': {
+                # Assuming file_name is of type 'S' (String)
+                ':item_path': file_path
+            }
+        }
+        response = permissions_table.query(**params)["Items"][0]
+        permissions_table.delete_item(
+            Key={
+                'username': response['username'], 
+                'file_name': response['file_name']
+            }
+        )
     except Exception as e:
         return create_response(500, e)

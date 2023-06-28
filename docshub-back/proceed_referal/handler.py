@@ -58,6 +58,6 @@ def proceed_referal(event, context):
     except Exception as e:
         stepfunctions_client = boto3.client('stepfunctions')
         stepfunctions_client.send_task_failure(
-            taskToken=execution_id,
+            taskToken=token,
             output=json.dumps({'error': e})
         )

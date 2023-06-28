@@ -28,7 +28,26 @@ def get_file_metadata(event, context):
         
         for item in response["Items"]:
             if item['file_name'] == fileKey:
+                item['owner'] = find_owner(item['album_id'])
                 return create_response(200, item)
         return create_response(404, None)
     except Exception as e:
         return create_response(500, e)
+
+
+def find_owner(album_id):
+    owner_sub = album_id.split("/")[0]
+
+    client = boto3.client('cognito-idp', region_name='eu-central-1')
+    try:
+        response = client.list_users(
+            UserPoolId='eu-central-1_PQInK2hdy',
+            Filter=f'sub = "{owner_sub}"'
+        )
+        username = response['Users'][0]['Username']
+        return username
+    except IndexError:
+        return None
+    except Exception as e:
+        print(f'Error: {str(e)}')
+        return None

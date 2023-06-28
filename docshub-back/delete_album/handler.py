@@ -1,7 +1,7 @@
 import json
 
 from utils.s3_config import s3, s3_bucket_name
-from utils.dynamodb_config import table, album_table, table_name, album_table_name
+from utils.dynamodb_config import table, album_table, table_name, album_table_name, dynamodb
 
 from utils.response import create_response
 
@@ -10,6 +10,7 @@ def delete_album(event, context):
     print(event['body'])
     try:
         album_path = json.loads(event['body'])['albumPath']
+        remove_permissions(album_path)
         album_tokens = album_path.split("/")
         album_name = album_tokens[-1]
         album_path = ""
@@ -70,3 +71,22 @@ def delete_album_recursive(album_path, album_name):
             'parent_album_id': album_path
         }
     )
+    
+    
+def remove_permissions(album_id):
+    permissions_table_name = 'permissions'
+    permissions_table = dynamodb.Table(permissions_table_name)
+    
+    items = permissions_table.scan()['Items']
+    print(items)
+    for item in items:
+        if item['file_name'].startswith(album_id):
+            try:
+                permissions_table.delete_item(
+                    Key={
+                        'username': item['username'], 
+                        'file_name': item['file_name']
+                    }
+                )
+            except Exception as e:
+                return create_response(500, e)
