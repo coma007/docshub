@@ -10,7 +10,7 @@ import { getCurrentSessionSub } from '../../../utils/session'
 import FileUpdateService from '../services/FileUpdateService'
 import FileMetadataService from '../../file-list/services/FileMetadataService'
 
-const FileUpdateModal = (props: { selectedFile:string, isOpenModal: boolean, closeModal: any}) => {
+const FileUpdateModal = (props: { selectedFile: string, isOpenModal: boolean, closeModal: any }) => {
 
     const [description, setDescription] = useState<string>("");
     const [imageTags, setImageTags] = useState<string[]>([]);
@@ -47,12 +47,12 @@ const FileUpdateModal = (props: { selectedFile:string, isOpenModal: boolean, clo
         // if(selectedFile?.type){
 
         // }
-        getCurrentSessionSub().then(async result =>{
-            let tmpData: any = {...data};
+        getCurrentSessionSub().then(async result => {
+            let tmpData: any = { ...data };
             tmpData.description = description;
             tmpData.tags = imageTags;
-            
-    
+
+
             FileUpdateService.Update(tmpData)
                 .then(async result => {
                     if (result !== true) {

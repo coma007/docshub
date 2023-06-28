@@ -13,6 +13,10 @@ const AlbumCreateModal = (props: { isOpenModal: boolean, closeModal: any, curren
         setAlbumName(event.target.value);
     };
 
+    useEffect(() => {
+        setAlbumName("")
+    }, [props.isOpenModal])
+
     const proccessData = async () => {
         // TODO validate types
         // if(selectedFile?.type){

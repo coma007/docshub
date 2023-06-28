@@ -172,6 +172,8 @@ function FileListPage(props: { option: string }) {
 
     const closeFileUpdateModal = async () => {
         setOpenFileUpdateModal(false);
+        setSelectedFile(undefined);
+        setSelectedImageSrc(undefined);
         await new Promise(r => setTimeout(r, 2000));
         await fetchImages()
     };
@@ -234,6 +236,8 @@ function FileListPage(props: { option: string }) {
             FileDeleteService.delete_image(fileKey);
         }
         await fetchImages()
+        setSelectedFile(undefined);
+        setSelectedImageSrc(undefined);
     }
 
 

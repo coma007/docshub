@@ -18,6 +18,16 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
     const [selectedFile, setSelectedFile] = useState<File>();
     const [selectedFileBase64, setSelectedFileBase64] = useState<string>();
 
+    useEffect(() => {
+        setName("")
+        setDescription("")
+        setImageTags([])
+        setSelectedFile(undefined)
+        setSelectedFileBase64("")
+    }, [props.isOpenModal])
+
+
+
     const handleNameChange = (event: any) => {
         setName(event.target.value);
     };
@@ -58,7 +68,7 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
 
         let album = props.albumPath!.at(-1)!.albumId;
         const data: FileMetadataWithFile = {
-            albumId: album.substring(0, album.length-1),
+            albumId: album.substring(0, album.length - 1),
             fileSize: selectedFile!.size,
             fileName: name,
             fileType: selectedFile!.type,
