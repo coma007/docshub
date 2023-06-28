@@ -10,8 +10,8 @@ const AlbumCreateService = {
         const token = await getToken()
         console.log(token)
         try {
-            const response = await axios.post(CREATE_ALBUM_URL(), {headers: {"Authorization": "Bearer " + token},
-                data});
+            const response = await axios.post(CREATE_ALBUM_URL(), 
+                data, {headers: {'Authorization': 'Bearer ' + token}});
             console.log(response);
             return response.status === 200;
         } catch (error) {

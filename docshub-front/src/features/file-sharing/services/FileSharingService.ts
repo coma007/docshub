@@ -21,7 +21,9 @@ const FileSharingService = {
     },
 
     add_permission: async function (users: string[], fileKey: string): Promise<string[]> {
-        return axios.post(ADD_USER_ACCESS(), { users: users, fileKey: fileKey })
+        const token = await getToken()
+        console.log(token)
+        return axios.post(ADD_USER_ACCESS(),  {users: users, fileKey: fileKey }, {headers: {"Authorization": "Bearer " + token}})
             .then(response => {
                 return response.data
             })
@@ -46,7 +48,9 @@ const FileSharingService = {
 
     get_user_permissions: async function (username: string): Promise<Permission[]> {
         console.log(username)
-        return axios.get(GET_USER_ACCESS(), { params: { username: username } })
+        const token = await getToken()
+        console.log(token)
+        return axios.get(GET_USER_ACCESS(), {headers: {"Authorization": "Bearer " + token}, params: { username: username } })
             .then(response => {
                 return response.data
             })

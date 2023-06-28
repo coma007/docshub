@@ -9,7 +9,7 @@ from utils.response import create_response
 
 def create_album(event, context):
     try:
-        body = json.loads(event['body'])['data']
+        body = json.loads(event['body'])
         parent_album_id = body['parentAlbumId']
         album_id = body['albumId']
         album_name = body['albumName']

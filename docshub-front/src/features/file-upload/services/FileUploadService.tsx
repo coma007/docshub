@@ -33,10 +33,12 @@ const FileUploadService = {
             console.log(token)
             const response = await axios.post(UPLOAD_FILE_FILE_URL(), 
             {
-                headers: {"Authorization": "Bearer " + token},
                 input: JSON.stringify({
                     body: {...data}}),
                 stateMachineArn: 'arn:aws:states:eu-central-1:852459778358:stateMachine:Upload',
+            },
+            {
+                headers: {"Authorization": "Bearer " + token}
             });
             return response.status === 200;
         } catch (error) {

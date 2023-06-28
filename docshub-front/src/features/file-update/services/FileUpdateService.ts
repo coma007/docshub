@@ -34,8 +34,10 @@ const FileUpdateService = {
             console.log(token)
             const response = await axios.patch(UPDATE_FILE_URL(), 
             {
-                headers: {"Authorization": "Bearer " + token},
                 body: {...data}
+            },
+            {
+                headers: {"Authorization": "Bearer " + token}
             });
             console.log(response);
             return response.status === 200;

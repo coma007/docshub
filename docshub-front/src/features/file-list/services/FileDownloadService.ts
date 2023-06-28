@@ -8,7 +8,7 @@ const FileDownloadService = {
     download_file: async function (fileKey: string): Promise<boolean> {
         const token = await getToken()
         console.log(token)
-        return axios.post(DOWNLOAD_FILE_URL(), {headers: {"Authorization": "Bearer " + token}, fileKey: fileKey })
+        return axios.post(DOWNLOAD_FILE_URL(), {fileKey: fileKey }, {headers: {"Authorization": "Bearer " + token}})
             .then(response => {
                 const data = response.data.body
                 const contentType = response.data["headers"]["Content-Type"]
