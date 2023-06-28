@@ -8,6 +8,7 @@ from utils.response import create_response
 
 
 def proceed_referal(event, context):
+    print(event)
     body = json.loads(event["Records"][0]["body"])
     new_user = body["input"]["user"]
     referal = body["input"]["referal"]

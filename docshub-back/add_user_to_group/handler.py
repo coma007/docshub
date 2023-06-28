@@ -47,7 +47,25 @@ def add_user_to_group(event, context):
             ReturnSubscriptionArn=True
         )
         print(response)
-
+        
+        try:
+            referal = event["request"]["userAttributes"]["custom:referal_email"]
+            if len(referal) > 0:
+                client = boto3.client('stepfunctions')
+                
+                state_machine_arn = 'arn:aws:states:eu-central-1:852459778358:stateMachine:FamilyRegistration'
+                input_data = json.dumps({ 
+                    'user' : user_name,
+                    'referal' : referal    
+                })
+                
+                client.start_execution(
+                    stateMachineArn=state_machine_arn,
+                    input=input_data
+                )
+        except Exception as e:
+            print(e)
+            return event
         return event
     except Exception as e:
         print(e)
