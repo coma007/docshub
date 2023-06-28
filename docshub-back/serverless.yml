@@ -105,6 +105,10 @@ functions:
     handler: mailing/handler.send_email
     package:
       include: "mailing/**"
+  on_file_change:
+    handler: on_file_change/handler.on_change
+    package:
+      include: "on_file_change/**"
   delete_file:
     handler: delete_file/handler.delete_file
     package:
