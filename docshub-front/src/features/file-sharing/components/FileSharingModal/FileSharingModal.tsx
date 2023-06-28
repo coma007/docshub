@@ -12,8 +12,10 @@ const FileSharingModal = (props: { isOpenModal: boolean, closeModal: any, select
     const [users, setUsers] = useState<Permission[]>([]);
 
     useEffect(() => {
-        if (props.selectedFile !== undefined)
+        if (props.selectedFile !== undefined) {
+            setUsernames([])
             fetchUsers()
+        }
     }, [props.selectedFile])
 
 
@@ -32,7 +34,14 @@ const FileSharingModal = (props: { isOpenModal: boolean, closeModal: any, select
     }
 
     const proccessData = async () => {
-
+        console.log(usernames)
+        FileSharingService.add_permission(usernames, props.selectedFile)
+            .then(result => {
+                console.log(result)
+                setUsernames([])
+                fetchUsers()
+            }
+            )
     }
 
     const onSubmit = async () => {
@@ -90,8 +99,9 @@ const FileSharingModal = (props: { isOpenModal: boolean, closeModal: any, select
                             type="grid"
                             templateColumns="1fr 1fr 1fr 1fr"
                             rowGap="15px"
+                            columnGap="10px"
                         >{(item, index) => <>
-                            <UserTag permission={item}></UserTag>
+                            <UserTag permission={item} fetchUsers={fetchUsers}></UserTag>
                         </>
                             }
                         </Collection>

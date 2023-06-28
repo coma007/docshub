@@ -17,7 +17,6 @@ const FileDeleteService = {
         try {
             data = data.substring(0, data.length - 1)
             const response = await axios.delete(DELETE_ALBUM_URL(), {data : {albumPath : data}});
-            console.log(response)
             return response.status === 204;
         } catch (error) {
             return false;

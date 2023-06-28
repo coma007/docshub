@@ -33,7 +33,6 @@ const FileUploadService = {
                     body: {...data}}),
                 stateMachineArn: 'arn:aws:states:eu-central-1:852459778358:stateMachine:Upload',
             });
-            console.log(response);
             return response.status === 200;
         } catch (error) {
             return false;

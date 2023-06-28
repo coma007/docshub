@@ -1,4 +1,4 @@
-import { Collection, Image, Button, Card, Text, Heading } from "@aws-amplify/ui-react"
+import { Collection, Image, Button, Card, Text, Heading, ScrollView } from "@aws-amplify/ui-react"
 import "@aws-amplify/ui-react/styles.css"
 import { S3ProviderListOutputItem } from '@aws-amplify/storage';
 import { useEffect, useState } from 'react';
@@ -10,11 +10,14 @@ import FileDetailsComponent from "../components/FileDetailsComponent";
 import FileDeleteService from "../services/FileDeleteService";
 import AlbumCreateModal from "../../album-create/components/AlbumCreateModal";
 import { AlbumMetadata } from "../../../types/AlbumMetadata"
-import { getCurrentSessionSub } from "../../../utils/session";
+import { getCurrentSession, getCurrentSessionAttribbutes, getCurrentSessionSub, getCurrentSessionUsername } from "../../../utils/session";
 import FileSharingModal from "../../file-sharing/components/FileSharingModal/FileSharingModal";
 import FileMetadataService from "../services/FileMetadataService";
 import FileUpdateService from "../../file-update/services/FileUpdateService";
 import FileUpdateModal from "../../file-update/components/FileUpdateModal";
+import FileSharingService from "../../file-sharing/services/FileSharingService";
+import { getDistinctSecondHighestPaths as getDistinctHighestPaths } from "../../../utils/filepaths";
+import { Auth } from "aws-amplify";
 
 function FileListPage(props: { option: string }) {
 
@@ -47,24 +50,62 @@ function FileListPage(props: { option: string }) {
         }
     }, [albumStack])
 
-    const fetchImages = async () => {
-        const results = await S3Service.getAllFiles(albumStack?.at(-1)?.albumId);
-        setImageKeys(results);
-        let s3Images = await Promise.all(
-            results.map(
-                async file => await S3Service.getFile(file.key!)
-            )
-        );
-        let types = await Promise.all(
-            results.map(
-                async file => getFileType((await S3Service.getFileMetadata(file.key!)).contentType!)
-            )
-        )
-        s3Images = s3Images.slice(1);
-        types = types.slice(1);
-        setImages(s3Images);
-        setFileTypes(types);
+    useEffect(() => {
+        setAlbumStack([])
+        if (albumStack !== undefined) {
+            fetchImages();
+        }
+    }, [props.option])
 
+    const fetchImages = async () => {
+        if (props.option === "owned") {
+            const results = await S3Service.getAllFiles(albumStack?.at(-1)?.albumId);
+            setImageKeys(results);
+            let s3Images = await Promise.all(
+                results.map(
+                    async file => await S3Service.getFile(file.key!)
+                )
+            );
+            let types = await Promise.all(
+                results.map(
+                    async file => getFileType((await S3Service.getFileMetadata(file.key!)).contentType!)
+                )
+            )
+            s3Images = s3Images.slice(1);
+            types = types.slice(1);
+            setImages(s3Images);
+            setFileTypes(types);
+        }
+        else {
+            let username = await getCurrentSessionUsername()
+            console.log(username)
+            let permissions = await FileSharingService.get_user_permissions(username);
+            console.log(permissions)
+            let roots = getDistinctHighestPaths(permissions.map(item => item.file_name));
+
+            let results: any[] = []
+
+            roots.forEach(async root => {
+                results.concat(await S3Service.getAllFiles(root + "/"))
+            });
+            console.log("results" + results)
+
+            setImageKeys(results);
+            let s3Images = await Promise.all(
+                results.map(
+                    async file => await S3Service.getFile(file.key!)
+                )
+            );
+            let types = await Promise.all(
+                results.map(
+                    async file => getFileType((await S3Service.getFileMetadata(file.key!)).contentType!)
+                )
+            )
+            s3Images = s3Images.slice(1);
+            types = types.slice(1);
+            setImages(s3Images);
+            setFileTypes(types);
+        }
     }
 
     const [isOpenFileUploadModal, setOpenFileUploadModal] = useState(false);
@@ -76,17 +117,18 @@ function FileListPage(props: { option: string }) {
         setOpenFileUploadModal(true);
     };
 
-    const closeFileUploadModal = () => {
+    const closeFileUploadModal = async () => {
         setOpenFileUploadModal(false);
+        await fetchImages()
     };
 
     const handleAlbumCreate = () => {
         setOpenAlbumCreateModal(true);
     };
 
-    const closeAlbumCreateModal = () => {
+    const closeAlbumCreateModal = async () => {
         setOpenAlbumCreateModal(false);
-        fetchImages()
+        await fetchImages()
     };
 
     const handleFileShareModal = () => {
@@ -202,7 +244,8 @@ function FileListPage(props: { option: string }) {
                         className={FileListPageCSS.header}>
                         <span></span>
                         <Text>title</Text>
-                        <span ></span>
+                        <span></span>
+                        <span >actions </span>
                     </Card>
                     <Collection
                         items={images}
@@ -245,8 +288,8 @@ function FileListPage(props: { option: string }) {
                                     <div></div>
                                 }
                                 {fileTypes[index] != "directory" ?
-                                    <button className={FileListPageCSS.buttonicon} onClick={ handleFileUpdateModal}>
-                                        <Image className={FileListPageCSS.image} alt="update" src="/actions/download.png" />
+                                    <button className={FileListPageCSS.buttonicon} onClick={handleFileUpdateModal}>
+                                        <Image className={FileListPageCSS.image} alt="edt" src="/actions/edit.png" />
                                     </button>
                                     :
                                     <div></div>
