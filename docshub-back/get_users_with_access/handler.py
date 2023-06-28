@@ -1,33 +1,32 @@
 import boto3
-import json
-import base64
+from boto3.dynamodb.conditions import Key
 
-from utils.s3_config import s3, s3_bucket_name
-from utils.dynamodb_config import table
-
+from utils.dynamodb_config import dynamodb
 from utils.response import create_response
 
 
 def get_users_with_access(event, context):
-    try:
-        file_key = event['fileKey']
-        response = s3.get_object(
-            Bucket=s3_bucket_name, Key="public/" + file_key)
+    item_path = event['queryStringParameters']['fileName']
 
-        file_data = base64.b64encode(
-            response.get("Body").read()).decode("utf-8")
+    table_name = 'permissions'
+    table = dynamodb.Table(table_name)
+
+    try:
+        response = table.query(
+            IndexName="item_path-index",
+            KeyConditionExpression=Key('item_path').eq(item_path),
+        )
+        print(response)
+
+        usernames = [item['username'] for item in response['Items']]
 
         return {
             'statusCode': 200,
-            'body': file_data,
-            'headers': {
-                'Access-Control-Allow-Origin': '*',
-                'Content-Type': response['ContentType'],
-                'Content-Disposition': f'attachment; filename={file_key}'
-            }
+            'body': usernames
         }
+
     except Exception as e:
         return {
             'statusCode': 500,
-            'body': json.dumps(e, default=str)
+            'body': str(e)
         }
