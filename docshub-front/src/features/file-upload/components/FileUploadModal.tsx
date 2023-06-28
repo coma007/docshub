@@ -8,8 +8,9 @@ import FileUploadService from '../services/FileUploadService'
 import FileUploadModalCSS from "./FileUploadModal.module.css"
 import { TagsInput } from "react-tag-input-component";
 import { getCurrentSessionSub } from '../../../utils/session'
+import { AlbumMetadata } from '../../../types/AlbumMetadata'
 
-const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchImages: any }) => {
+const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchImages: any, albumPath : AlbumMetadata[] | undefined }) => {
 
     const [description, setDescription] = useState<string>("");
     const [imageTags, setImageTags] = useState<string[]>([]);
@@ -61,6 +62,11 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
                 file: selectedFileBase64!
             };
     
+            if (props.albumPath !== undefined) {
+                data.albumId = props.albumPath!.at(-1)!.parentAlbumId + props.albumPath!.at(-1)!.albumName
+            }
+
+            console.log(data.albumId)
             FileUploadService.upload(data)
                 .then(async result => {
                     if (result !== true) {

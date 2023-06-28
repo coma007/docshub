@@ -142,6 +142,7 @@ function FileListPage(props: { option: string }) {
             {props.option == "owned" &&
                 <>
                     <FileUploadModal
+                        albumPath={albumStack}
                         isOpenModal={isOpenFileUploadModal}
                         closeModal={closeFileUploadModal}
                         fetchImages={fetchImages}></FileUploadModal>
