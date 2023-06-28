@@ -85,6 +85,10 @@ functions:
     #       path: /api/download-file
     #       method: get
     #       cors: true
+  upload_validation:
+    handler: upload_validation/handler.validate
+    package:
+      include: "upload_validation/**"
   upload_success_handling:
     handler: upload_success_handling/handler.handle_success
     package:
