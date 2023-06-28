@@ -3,7 +3,7 @@ import { getCurrentSession, getCurrentSessionSub } from '../utils/session';
 
 const S3Service = {
 
-    getAllFiles: async function (album?: string) {
+    getAllFiles: async function (album?: string){
         console.log(album)
         if (album === undefined) {
             album = ""

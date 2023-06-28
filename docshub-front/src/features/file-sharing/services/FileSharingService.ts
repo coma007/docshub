@@ -45,6 +45,7 @@ const FileSharingService = {
     },
 
     get_user_permissions: async function (username: string): Promise<Permission[]> {
+        console.log(username)
         return axios.get(GET_USER_ACCESS(), { params: { username: username } })
             .then(response => {
                 return response.data

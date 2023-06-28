@@ -16,7 +16,7 @@ import FileMetadataService from "../services/FileMetadataService";
 import FileUpdateService from "../../file-update/services/FileUpdateService";
 import FileUpdateModal from "../../file-update/components/FileUpdateModal";
 import FileSharingService from "../../file-sharing/services/FileSharingService";
-import { getDistinctSecondHighestPaths as getDistinctHighestPaths } from "../../../utils/filepaths";
+import { getDistinctHighestPaths as getDistinctHighestPaths } from "../../../utils/filepaths";
 import { Auth } from "aws-amplify";
 
 function FileListPage(props: { option: string }) {
@@ -51,7 +51,18 @@ function FileListPage(props: { option: string }) {
     }, [albumStack])
 
     useEffect(() => {
-        setAlbumStack([])
+        setSelectedFile("")
+        setSelectedImageSrc("")
+        const setAlbum = async () => {
+            let currentSub = await getCurrentSessionSub();
+            let album: AlbumMetadata = {
+                albumId: currentSub + "/",
+                albumName: "root",
+                parentAlbumId: undefined
+            }
+            setAlbumStack([album]);
+        };
+        setAlbum();
         if (albumStack !== undefined) {
             fetchImages();
         }
@@ -59,7 +70,8 @@ function FileListPage(props: { option: string }) {
 
     const fetchImages = async () => {
         if (props.option === "owned") {
-            const results = await S3Service.getAllFiles(albumStack?.at(-1)?.albumId);
+            let results = await S3Service.getAllFiles(albumStack?.at(-1)?.albumId);
+            results = results.slice(1)
             setImageKeys(results);
             let s3Images = await Promise.all(
                 results.map(
@@ -71,38 +83,52 @@ function FileListPage(props: { option: string }) {
                     async file => getFileType((await S3Service.getFileMetadata(file.key!)).contentType!)
                 )
             )
-            s3Images = s3Images.slice(1);
-            types = types.slice(1);
             setImages(s3Images);
             setFileTypes(types);
         }
         else {
+
             let username = await getCurrentSessionUsername()
-            console.log(username)
             let permissions = await FileSharingService.get_user_permissions(username);
-            console.log(permissions)
-            let roots = getDistinctHighestPaths(permissions.map(item => item.file_name));
 
-            let results: any[] = []
+            let roots: Set<string>
+            if (albumStack?.length == 1) {
+                roots = getDistinctHighestPaths(permissions.map(item => item.file_name));
+            }
+            else {
+                roots = new Set<string>()
+                let currentAlbum = albumStack?.at(-1)?.albumId!
+                roots.add(currentAlbum.substring(0, currentAlbum.length - 1))
+            }
 
-            roots.forEach(async root => {
-                results.concat(await S3Service.getAllFiles(root + "/"))
+            let results: any[] = [];
+            console.log(roots)
+            const promises = Array.from(roots).map(async item => {
+                const files = await S3Service.getAllFiles(item + "/");
+                return files;
             });
-            console.log("results" + results)
+            results = (await Promise.all(promises)).flat();
 
-            setImageKeys(results);
+            let allowed = results.filter(element => {
+                if (permissions.map(item => item.file_name).includes(element.key)) {
+                    return element
+                }
+            });
+            if (albumStack?.length != 1) {
+                allowed = allowed.slice(1)
+            }
+            setImageKeys(allowed);
+
             let s3Images = await Promise.all(
-                results.map(
+                allowed.map(
                     async file => await S3Service.getFile(file.key!)
                 )
             );
             let types = await Promise.all(
-                results.map(
+                allowed.map(
                     async file => getFileType((await S3Service.getFileMetadata(file.key!)).contentType!)
                 )
             )
-            s3Images = s3Images.slice(1);
-            types = types.slice(1);
             setImages(s3Images);
             setFileTypes(types);
         }
@@ -152,13 +178,13 @@ function FileListPage(props: { option: string }) {
     function handleItemClick(index: number, item: string) {
         if (fileTypes[index] === "directory") {
             let album: AlbumMetadata = {
-                albumId: imageKeys[index + 1].key!,
-                albumName: getFileName(getFileName(imageKeys[index + 1]?.key!)),
+                albumId: imageKeys[index].key!,
+                albumName: getFileName(getFileName(imageKeys[index]?.key!)),
                 parentAlbumId: albumStack?.at(-1)?.albumId
             }
             setAlbumStack([...albumStack!, album])
         }
-        setSelectedFile(imageKeys[index + 1].key);
+        setSelectedFile(imageKeys[index].key);
         setSelectedImageSrc(item);
     }
 
@@ -278,10 +304,10 @@ function FileListPage(props: { option: string }) {
                                     }
                                 </span>
 
-                                <Text>{getFileName(imageKeys[index + 1]?.key!)}</Text>
+                                <Text>{getFileName(imageKeys[index]?.key!)}</Text>
                                 {props.option != "owned" && <><div></div><div></div></>}
                                 {fileTypes[index] != "directory" ?
-                                    <button className={FileListPageCSS.buttonicon} onClick={() => downloadFile(imageKeys[index + 1]?.key!)}>
+                                    <button className={FileListPageCSS.buttonicon} onClick={() => downloadFile(imageKeys[index]?.key!)}>
                                         <Image className={FileListPageCSS.image} alt="get" src="/actions/download.png" />
                                     </button>
                                     :
@@ -298,7 +324,7 @@ function FileListPage(props: { option: string }) {
                                     <button className={FileListPageCSS.buttonicon} onClick={handleFileShareModal}>
                                         <Image className={FileListPageCSS.image} alt="shr" src="/actions/share.png" />
                                     </button>
-                                    <button className={FileListPageCSS.buttonicon} onClick={() => deleteFile(imageKeys[index + 1]?.key!)}>
+                                    <button className={FileListPageCSS.buttonicon} onClick={() => deleteFile(imageKeys[index]?.key!)}>
                                         <Image className={FileListPageCSS.image} alt="del" src="/actions/delete.png" />
                                     </button>
                                 </>
