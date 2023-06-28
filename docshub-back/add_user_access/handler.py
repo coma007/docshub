@@ -1,45 +1,78 @@
 import boto3
 from boto3.dynamodb.conditions import Key
 
-from utils.dynamodb_config import dynamodb
+from utils.dynamodb_config import dynamodb, table, table_name
 from utils.response import create_response
+
+permissions_table_name = 'permissions'
+permissions_table = dynamodb.Table(permissions_table_name)
 
 
 def add_user_access(event, context):
-    permission = event['permission']
 
-    username = permission['username']
-    file_name = permission['file_name']
-
-    table_name = 'permissions'
-    table = dynamodb.Table(table_name)
+    users = event['users']
+    file_name = event['fileKey']
 
     try:
-        table.delete_item(
+        results = []
+
+        if file_name.endswith("/"):
+            for user in users:
+                results.append(create_album_permission(user, file_name))
+        else:
+            for user in users:
+                results.append(create_file_permission(user, file_name))
+
+        return create_response(200, results)
+
+    except Exception as e:
+        return create_response(500, e)
+
+
+def create_album_permission(username, file_name):
+    albums = {}
+    items = table.scan()['Items']
+    for item in items:
+        if item['album_id'].startswith(file_name):
+            albums.add(item['album_id'])
+
+    files = []
+    for album in albums:
+        files.append(table.query(
+            TableName=table_name,
+            KeyConditionExpression='album_id = :val',
+            ExpressionAttributeValues={
+                ':val': album
+            }
+        )["Items"])
+
+    results = []
+    for file in files:
+        results.append(create_file_permission(username, file))
+    return results
+
+
+def create_file_permission(username, file_name):
+    if access_exists(username, file_name):
+        return permissions_table.get_item(
             Key={
                 'username': username,
                 'file_name': file_name
             }
         )
+    result = permissions_table.put_item(Item={
+        'username': username,
+        'file_name': file_name
+    })
 
-        if file_name.endswith("/"):
-            response = table.query(
-                KeyConditionExpression='username = :username AND begins_with(file_name, :prefix)',
-                ExpressionAttributeValues={
-                    ':username': username,
-                    ':prefix': file_name
-                }
-            )
+    return result
 
-            with table.batch_writer() as batch:
-                for item in response['Items']:
-                    batch.delete_item(
-                        Key={
-                            'username': item['username'],
-                            'file_name': item['file_name']
-                        }
-                    )
 
-        return create_response(200, "Deleted successfuly")
-    except Exception as e:
-        return create_response(500, e)
+def access_exists(username, file_name):
+    response = permissions_table.get_item(
+        Key={
+            'username': username,
+            'file_name': file_name
+        }
+    )
+    return 'Item' in response
