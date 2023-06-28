@@ -41,7 +41,7 @@ const AlbumCreateModal = (props: { isOpenModal: boolean, closeModal: any, curren
         <Modal style={{
             content: {
                 width: '43%',
-                height: `42%`,
+                height: `45%`,
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',

@@ -10,12 +10,17 @@ import { TagsInput } from "react-tag-input-component";
 import { getCurrentSessionSub } from '../../../utils/session'
 import { AlbumMetadata } from '../../../types/AlbumMetadata'
 
-const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchImages: any, albumPath : AlbumMetadata[] | undefined }) => {
+const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchImages: any, albumPath: AlbumMetadata[] | undefined }) => {
 
+    const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [imageTags, setImageTags] = useState<string[]>([]);
     const [selectedFile, setSelectedFile] = useState<File>();
     const [selectedFileBase64, setSelectedFileBase64] = useState<string>();
+
+    const handleNameChange = (event: any) => {
+        setName(event.target.value);
+    };
 
     const handleDescriptionChange = (event: any) => {
         setDescription(event.target.value);
@@ -26,7 +31,7 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
     }
 
     const onFileChanged = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.files![0])
+        setName(e.target.files![0].name)
         setSelectedFile(e.target.files![0]);
     }
 
@@ -50,35 +55,32 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
         // if(selectedFile?.type){
 
         // }
-        getCurrentSessionSub().then(async result =>{
-            const data: FileMetadataWithFile = {
-                albumId: result,
-                fileSize: selectedFile!.size,
-                fileName: selectedFile!.name,
-                fileType: selectedFile!.type,
-                description: description,
-                dateOfCreation: new Date(selectedFile!.lastModified),
-                tags: imageTags,
-                file: selectedFileBase64!
-            };
-    
-            if (props.albumPath !== undefined) {
-                data.albumId = props.albumPath!.at(-1)!.parentAlbumId + props.albumPath!.at(-1)!.albumName
-            }
 
-            console.log(data.albumId)
-            FileUploadService.upload(data)
-                .then(async result => {
-                    if (result !== true) {
-                        await S3Service.removeFile(data.fileName)
-                    }
-                })
-                .catch(error => {
-                    console.log("error:", error)
-                })
-            await props.fetchImages();
-            props.closeModal();
-        }).catch(e => console.log(e));
+        let album = props.albumPath!.at(-1)!.albumId;
+        const data: FileMetadataWithFile = {
+            albumId: album.substring(0, album.length-1),
+            fileSize: selectedFile!.size,
+            fileName: name,
+            fileType: selectedFile!.type,
+            description: description,
+            dateOfCreation: new Date(selectedFile!.lastModified),
+            tags: imageTags,
+            file: selectedFileBase64!
+        };
+
+
+
+        FileUploadService.upload(data)
+            .then(async result => {
+                if (result !== true) {
+                    await S3Service.removeFile(data.fileName)
+                }
+            })
+            .catch(error => {
+                console.log("error:", error)
+            })
+        await props.fetchImages();
+        props.closeModal();
     }
 
     const onSubmit = async () => {
@@ -90,7 +92,7 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
         <Modal style={{
             content: {
                 width: '70%',
-                height: `83%`,
+                height: `87%`,
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
@@ -120,7 +122,8 @@ const FileUploadModal = (props: { isOpenModal: boolean, closeModal: any, fetchIm
                         <TextField className={FileUploadModal.name}
                             placeholder='Input file name... '
                             label='File name [required]:'
-                            value={selectedFile?.name} />
+                            value={name}
+                            onChange={handleNameChange} />
                     </div>
                     <div className={FileUploadModalCSS.form}>
                         <h3>Additional file information</h3>

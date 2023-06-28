@@ -75,8 +75,8 @@ const FileUpdateModal = (props: { selectedFile:string, isOpenModal: boolean, clo
     return (
         <Modal style={{
             content: {
-                width: '70%',
-                height: `83%`,
+                width: '40%',
+                height: `87%`,
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
@@ -93,7 +93,7 @@ const FileUpdateModal = (props: { selectedFile:string, isOpenModal: boolean, clo
                 <button className={FileUpdateModalCSS.close}
                     onClick={props.closeModal}
                 >✖</button>
-                <h2>Add file to your gallery</h2>
+                <h2>Edit file</h2>
                 <div className={FileUpdateModalCSS.content}>
                     <div className={FileUpdateModalCSS.form}>
                         <h3>Additional file information</h3>
