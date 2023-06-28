@@ -8,3 +8,4 @@ export const CREATE_ALBUM_URL = () => url + "create-album";
 export const DELETE_FILE_URL = () => url + "delete-file";
 export const DOWNLOAD_FILE_URL = () => url + "download-file";
 export const GET_USERS_WITH_ACCESS = () => url + "get-users-with-access";
+export const UPDATE_FILE_URL = () => url + "update";
