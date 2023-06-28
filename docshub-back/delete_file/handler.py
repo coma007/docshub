@@ -15,7 +15,7 @@ def delete_file(event, context):
                 break
             album_id += key + "/"
         response = s3.delete_object(Bucket=s3_bucket_name, Key="public/" + album_id + file_key)
-        
+        album_id = album_id[:-1]
         files = table.query(
             KeyConditionExpression="album_id = :id",
             ExpressionAttributeValues={
