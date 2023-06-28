@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {  UPDATE_FILE_URL } from '../../../api';
 import { FileMetadata, FileMetadataWithFile } from '../../../types/FileMetadata';
+import { getToken } from '../../../utils/session';
 
 const getFileSize = (base64: string) => {
     let stringLength = base64.length;
@@ -29,9 +30,12 @@ const FileUpdateService = {
         try {
             if(!validateFile(data))
                 return false;
+            const token = await getToken()
+            console.log(token)
             const response = await axios.patch(UPDATE_FILE_URL(), 
             {
-                    body: {...data}
+                headers: {"Authorization": "Bearer " + token},
+                body: {...data}
             });
             console.log(response);
             return response.status === 200;

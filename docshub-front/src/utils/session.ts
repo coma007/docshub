@@ -27,3 +27,8 @@ export const getCurrentSessionUsername = async () => {
     let session = await getCurrentSession();
     return session['username']
 }
+
+export const getToken = async () => {
+    const token = (await Auth.currentSession()).getIdToken().getJwtToken()
+    return token
+}

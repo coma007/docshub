@@ -2,11 +2,14 @@ import axios from 'axios';
 import { DOWNLOAD_FILE_URL, GET_FILE_METADA } from '../../../api';
 import { Buffer } from 'buffer';
 import { FileMetadata } from '../../../types/FileMetadata';
+import { getToken } from '../../../utils/session';
 
 const FileMetadataService = {
 
     get_file_metadata: async function (fileKey: string): Promise<FileMetadata> {
-        return axios.get(GET_FILE_METADA(), {params: {fileName: fileKey}})
+        const token = await getToken()
+        console.log(token)
+        return axios.get(GET_FILE_METADA(), {headers: {"Authorization": "Bearer " + token}, params: {fileName: fileKey}})
             .then(response => {
                 let data: FileMetadata = {
                     albumId: response.data["album_id"],
