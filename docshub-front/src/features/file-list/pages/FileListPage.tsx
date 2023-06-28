@@ -313,12 +313,13 @@ function FileListPage(props: { option: string }) {
                                     :
                                     <div></div>
                                 }
-                                {fileTypes[index] != "directory" ?
+                                {fileTypes[index] != "directory" && props.option == "owned" ?
                                     <button className={FileListPageCSS.buttonicon} onClick={handleFileUpdateModal}>
                                         <Image className={FileListPageCSS.image} alt="edt" src="/actions/edit.png" />
                                     </button>
-                                    :
-                                    <div></div>
+                                    : <>
+                                        <div></div>
+                                    </> 
                                 }
                                 {props.option == "owned" && <>
                                     <button className={FileListPageCSS.buttonicon} onClick={handleFileShareModal}>
