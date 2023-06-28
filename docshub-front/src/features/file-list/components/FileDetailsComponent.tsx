@@ -69,6 +69,10 @@ function FileDetailsComponent(props: { selectedFile: string | undefined, selecte
                             <Text className={FileDetailsComponentCSS.label}>Size</Text>
                             <Text>{formatFileSize(data?.fileSize!)}</Text>
                         </div>
+                        <div className={FileDetailsComponentCSS.detailItem}>
+                            <Text className={FileDetailsComponentCSS.label}>Owner</Text>
+                            <Text>{data?.owner}</Text>
+                        </div>
                     </div>
                     <Text className={FileDetailsComponentCSS.description}>
                         <div className={FileDetailsComponentCSS.label}>Description</div>

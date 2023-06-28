@@ -19,7 +19,8 @@ const FileMetadataService = {
                     fileSize: response.data["file_size"],
                     description: response.data["description"],
                     dateOfCreation: response.data["last_change_date"],
-                    tags: response.data["tags"]
+                    tags: response.data["tags"],
+                    owner: response.data["owner"]
                 }
                 return data;
             })

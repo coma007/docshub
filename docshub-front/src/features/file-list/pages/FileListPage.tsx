@@ -69,6 +69,7 @@ function FileListPage(props: { option: string }) {
     }, [props.option])
 
     const fetchImages = async () => {
+
         if (props.option === "owned") {
             let results = await S3Service.getAllFiles(albumStack?.at(-1)?.albumId);
             results = results.slice(1)
@@ -90,7 +91,7 @@ function FileListPage(props: { option: string }) {
 
             let username = await getCurrentSessionUsername()
             let permissions = await FileSharingService.get_user_permissions(username);
-
+            console.log(permissions)
             let roots: Set<string>
             if (albumStack?.length == 1) {
                 roots = getDistinctHighestPaths(permissions.map(item => item.file_name));
@@ -102,7 +103,6 @@ function FileListPage(props: { option: string }) {
             }
 
             let results: any[] = [];
-            console.log(roots)
             const promises = Array.from(roots).map(async item => {
                 const files = await S3Service.getAllFiles(item + "/");
                 return files;
@@ -110,10 +110,11 @@ function FileListPage(props: { option: string }) {
             results = (await Promise.all(promises)).flat();
 
             let allowed = results.filter(element => {
-                if (permissions.map(item => item.file_name).includes(element.key)) {
+                if (permissions.map(item => item.file_name).includes(element.key) && element.key.split("/")[1] != "") {
                     return element
                 }
             });
+            console.log(allowed)
             if (albumStack?.length != 1) {
                 allowed = allowed.slice(1)
             }
@@ -145,6 +146,7 @@ function FileListPage(props: { option: string }) {
 
     const closeFileUploadModal = async () => {
         setOpenFileUploadModal(false);
+        await new Promise(r => setTimeout(r, 2000));
         await fetchImages()
     };
 
@@ -154,6 +156,7 @@ function FileListPage(props: { option: string }) {
 
     const closeAlbumCreateModal = async () => {
         setOpenAlbumCreateModal(false);
+        await new Promise(r => setTimeout(r, 2000));
         await fetchImages()
     };
 
@@ -161,12 +164,16 @@ function FileListPage(props: { option: string }) {
         setOpenFileShareModal(true);
     };
 
-    const closeFileShareModal = () => {
+    const closeFileShareModal = async () => {
         setOpenFileShareModal(false);
+        await new Promise(r => setTimeout(r, 2000));
+        await fetchImages()
     };
 
-    const closeFileUpdateModal = () => {
+    const closeFileUpdateModal = async () => {
         setOpenFileUpdateModal(false);
+        await new Promise(r => setTimeout(r, 2000));
+        await fetchImages()
     };
 
     const handleFileUpdateModal = () => {
@@ -176,6 +183,12 @@ function FileListPage(props: { option: string }) {
 
 
     function handleItemClick(index: number, item: string) {
+        console.log(item)
+        setSelectedFile(imageKeys[index].key);
+        setSelectedImageSrc(item);
+    }
+
+    async function selectItem(index: number, item: string) {
         if (fileTypes[index] === "directory") {
             let album: AlbumMetadata = {
                 albumId: imageKeys[index].key!,
@@ -214,12 +227,13 @@ function FileListPage(props: { option: string }) {
         FileDownloadService.download_file(fileKey);
     }
 
-    const deleteFile = (fileKey: string) => {
+    const deleteFile = async (fileKey: string) => {
         if (fileKey.endsWith("/")) {
             FileDeleteService.delete_album(fileKey);
         } else {
             FileDeleteService.delete_image(fileKey);
         }
+        await fetchImages()
     }
 
 
@@ -304,7 +318,7 @@ function FileListPage(props: { option: string }) {
                                     }
                                 </span>
 
-                                <Text>{getFileName(imageKeys[index]?.key!)}</Text>
+                                <Text onClick={() => selectItem(index, item)}>{getFileName(imageKeys[index]?.key!)}</Text>
                                 {props.option != "owned" && <><div></div><div></div></>}
                                 {fileTypes[index] != "directory" ?
                                     <button className={FileListPageCSS.buttonicon} onClick={() => downloadFile(imageKeys[index]?.key!)}>
@@ -319,7 +333,7 @@ function FileListPage(props: { option: string }) {
                                     </button>
                                     : <>
                                         <div></div>
-                                    </> 
+                                    </>
                                 }
                                 {props.option == "owned" && <>
                                     <button className={FileListPageCSS.buttonicon} onClick={handleFileShareModal}>

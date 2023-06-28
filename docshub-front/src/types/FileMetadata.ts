@@ -8,7 +8,8 @@ export interface FileMetadata {
     fileSize: number,
     description: string,
     dateOfCreation: Date,
-    tags: string[]
+    tags: string[],
+    owner: string
 }
 
 export interface FileMetadataWithFile {
