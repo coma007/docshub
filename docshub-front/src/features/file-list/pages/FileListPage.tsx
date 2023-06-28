@@ -11,7 +11,7 @@ import FileDeleteService from "../services/FileDeleteService";
 import AlbumCreateModal from "../../album-create/components/AlbumCreateModal";
 import { AlbumMetadata } from "../../../types/AlbumMetadata"
 import { getCurrentSessionSub } from "../../../utils/session";
-import FileSharingModal from "../../file-sharing/components/FileSharingModal";
+import FileSharingModal from "../../file-sharing/components/FileSharingModal/FileSharingModal";
 import FileMetadataService from "../services/FileMetadataService";
 import FileUpdateService from "../../file-update/services/FileUpdateService";
 import FileUpdateModal from "../../file-update/components/FileUpdateModal";
