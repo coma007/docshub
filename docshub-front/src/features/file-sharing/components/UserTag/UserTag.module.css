@@ -3,7 +3,6 @@
     font-weight: 400;
     background-color: #047d9531;
     border-radius: 10px;
-    width: fit-content;
     font-size: 18px;
 }
 
@@ -12,4 +11,5 @@
     border: none;
     background: transparent;
     cursor: pointer;
+    float: right;
 }

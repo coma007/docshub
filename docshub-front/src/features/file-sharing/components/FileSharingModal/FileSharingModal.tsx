@@ -20,7 +20,6 @@ const FileSharingModal = (props: { isOpenModal: boolean, closeModal: any, select
     const fetchUsers = () => {
         FileSharingService.get_users_with_access(props.selectedFile)
             .then(result => {
-                console.log(result)
                 setUsers(result)
             }
             )
@@ -57,8 +56,8 @@ const FileSharingModal = (props: { isOpenModal: boolean, closeModal: any, select
     return (
         <Modal style={{
             content: {
-                width: '60%',
-                height: `77%`,
+                width: '65%',
+                height: `80%`,
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
@@ -89,7 +88,7 @@ const FileSharingModal = (props: { isOpenModal: boolean, closeModal: any, select
                         <Collection
                             items={users}
                             type="grid"
-                            templateColumns="1fr 1fr 1fr 1fr 1fr 1fr"
+                            templateColumns="1fr 1fr 1fr 1fr"
                             rowGap="15px"
                         >{(item, index) => <>
                             <UserTag permission={item}></UserTag>

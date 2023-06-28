@@ -18,8 +18,9 @@ const FileSharingService = {
     },
 
     remove_permission: async function (permission: Permission): Promise<string[]> {
-        return axios.post(REMOVE_USER_ACCESS(), { body: { permission: permission } })
+        return axios.delete(REMOVE_USER_ACCESS(), { data: { permission: permission } })
             .then(response => {
+                console.log("aaaaaaaaaaa")
                 console.log(response)
                 return response.data
             })
