@@ -147,7 +147,11 @@ function FileListPage(props: { option: string }) {
     }
 
     const deleteFile = (fileKey: string) => {
-        FileDeleteService.delete_image(fileKey);
+        if (fileKey.endsWith("/")) {
+            FileDeleteService.delete_album(fileKey);
+        } else {
+            FileDeleteService.delete_image(fileKey);
+        }
     }
 
 
@@ -156,6 +160,7 @@ function FileListPage(props: { option: string }) {
             {props.option == "owned" &&
                 <>
                     <FileUploadModal
+                        albumPath={albumStack}
                         isOpenModal={isOpenFileUploadModal}
                         closeModal={closeFileUploadModal}
                         fetchImages={fetchImages}></FileUploadModal>

@@ -16,7 +16,8 @@ def get_file_metadata(event, context):
     for key in fileTokens:
         if key == fileKey:
             break
-        albumId += key
+        albumId += key + "/"
+    albumId = albumId[:-1]
     try:
         response = table.query(
             KeyConditionExpression="album_id = :id",

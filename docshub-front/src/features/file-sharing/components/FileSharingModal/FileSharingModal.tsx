@@ -3,10 +3,13 @@ import Modal from "react-modal"
 import FileSharingModalCSS from "./FileSharingModal.module.css"
 import { useEffect, useState } from 'react'
 import { TagsInput } from 'react-tag-input-component'
-import FileSharingService from '../services/FileSharingService'
+import FileSharingService from '../../services/FileSharingService'
+import UserTag from '../UserTag/UserTag'
+import { Permission } from '../../types/Permission'
 
 const FileSharingModal = (props: { isOpenModal: boolean, closeModal: any, selectedFile: any }) => {
 
+    const [users, setUsers] = useState<Permission[]>([]);
 
     useEffect(() => {
         if (props.selectedFile !== undefined)
@@ -17,7 +20,7 @@ const FileSharingModal = (props: { isOpenModal: boolean, closeModal: any, select
     const fetchUsers = () => {
         FileSharingService.get_users_with_access(props.selectedFile)
             .then(result => {
-                console.log(result)
+                setUsers(result)
             }
             )
     }
@@ -53,8 +56,8 @@ const FileSharingModal = (props: { isOpenModal: boolean, closeModal: any, select
     return (
         <Modal style={{
             content: {
-                width: '60%',
-                height: `70%`,
+                width: '65%',
+                height: `80%`,
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
@@ -80,10 +83,20 @@ const FileSharingModal = (props: { isOpenModal: boolean, closeModal: any, select
                 />
                 <Button onClick={onSubmit} className={FileSharingModalCSS.submit}>Share</Button>
                 <div className={FileSharingModalCSS.permissions}>
-                    <Text>Users that already have access to this item: </Text>
+                    <Text className={FileSharingModalCSS.title}>Users that already have access to this item: </Text>
                     <ScrollView className={FileSharingModalCSS.scroll}>
-                        {/* <Collection children={undefined} ></Collection> */}
+                        <Collection
+                            items={users}
+                            type="grid"
+                            templateColumns="1fr 1fr 1fr 1fr"
+                            rowGap="15px"
+                        >{(item, index) => <>
+                            <UserTag permission={item}></UserTag>
+                        </>
+                            }
+                        </Collection>
                     </ScrollView>
+                    <span className={FileSharingModalCSS.description}>Click on 'x' to remove user permission.</span>
                 </div>
             </div>
         </Modal>

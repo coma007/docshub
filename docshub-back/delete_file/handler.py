@@ -1,3 +1,4 @@
+import json
 from utils.s3_config import s3, s3_bucket_name
 from utils.dynamodb_config import table, table_name
 
@@ -6,7 +7,7 @@ from utils.response import create_response
 
 def delete_file(event, context):
     try:
-        file_key = event['fileKey']
+        file_key = json.loads(event['body'])['fileKey']
         file_tokens = file_key.split("/")
         file_key = file_tokens[-1]
         album_id = ""
@@ -15,7 +16,7 @@ def delete_file(event, context):
                 break
             album_id += key + "/"
         response = s3.delete_object(Bucket=s3_bucket_name, Key="public/" + album_id + file_key)
-        
+        album_id = album_id[:-1]
         files = table.query(
             KeyConditionExpression="album_id = :id",
             ExpressionAttributeValues={

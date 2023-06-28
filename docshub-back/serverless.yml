@@ -149,3 +149,12 @@ functions:
             path: /api/get-users-with-access
             method: get
             cors: true
+  remove_user_access:
+    handler: remove_user_access/handler.remove_user_access
+    package:
+      include: "remove_user_access/**"
+      events:
+        - http:
+            path: /api/remove-user-access
+            method: delete
+            cors: true

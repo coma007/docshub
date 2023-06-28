@@ -1,0 +1,15 @@
+.tag {
+    padding: 5px 20px;
+    font-weight: 400;
+    background-color: #047d9531;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.remove {
+    margin-left: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    float: right;
+}
