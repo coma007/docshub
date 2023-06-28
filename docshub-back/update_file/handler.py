@@ -1,6 +1,7 @@
 import boto3
 import json
 from botocore.exceptions import ClientError
+from datetime import datetime
 
 from utils.s3_config import s3, s3_bucket_name
 from utils.dynamodb_config import table, table_name
@@ -23,12 +24,14 @@ def update_file(event, context):
         Key={"file_id": file_id, "album_id": album_id},
         UpdateExpression="set "
                          "#description = :description_val, "
+                         "#last_change_date = :last_change_date, "
                          "#tags = :tags_val ",
         ConditionExpression="#file_id = :file_id_val AND #album_id = :album_id_val ",
         ExpressionAttributeNames={
             "#file_id": "file_id",
             "#album_id": "album_id",
             "#description": "description",
+            "#last_change_date" : "last_change_date",
             "#tags": "tags",
         },
 
@@ -36,6 +39,7 @@ def update_file(event, context):
             ":file_id_val": file_id,
             ":album_id_val": album_id,
             ":description_val": description,
+            ":last_change_date" : datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             ":tags_val": tags,
         },
         ReturnValues="UPDATED_NEW",
